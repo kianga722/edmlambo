@@ -1,0 +1,41 @@
+<div class='container-fluid'>
+
+  <section class='event-list'>
+
+    <% @dates.each do |date| %>
+      <div class='day'>
+        <%= DateTime.parse(date).strftime('%a, %b %d') %>
+      </div>
+
+      <% @eventsNYC.each do |event| %>
+        <% if event.date == date %>
+          <div class='event'>
+
+            <div class='event-title'>
+              <%= event.title %>
+            </div>
+
+            <div class='event-details'>
+              <span>
+                <%= event.venue %>
+              </span>
+              <span>
+                &nbsp;-&nbsp;
+              </span>
+              <span>
+                <%= event.location %>
+              </span>
+              <span>
+                <%= event.ages %>
+              </span>
+            </div>
+
+          </div>
+        <% end %>
+      <% end %>
+
+    <% end %>
+
+  </section>
+
+</div>

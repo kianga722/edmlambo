@@ -24,15 +24,81 @@ body {
   background-color: black;
 }
 
+.page {
+  position: relative;
+  margin: 0 10%;
+}
+
+/*
+Change Locations
+*/
+
+.location-wrapper {
+  z-index: 1;
+
+  color: white;
+}
+
+.location-change {
+  display: inline;
+}
+
+.location-change:hover {
+  cursor: pointer;
+}
+
+.location-current {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.popup-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 998;
+
+  opacity: 0.6;
+  background-color: black;
+}
+
+.location-popup-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.location-popup {
+  position: absolute;
+  width: 85%;
+  padding: 25px;
+  z-index: 999;
+
+  background-color: #ddd;
+  text-align: center;
+}
+
+/*
+Event List Styling
+*/
+
 .day {
-  margin-top: 5px;
-  margin-left: 20px;
+  margin: 10px 0 5px 20px;
 
   color: #ddb0a0;
   border-bottom: 1px solid #ddb0a0;
 }
 
-.event-title {
+.event {
+  margin-bottom: 16px;
+}
+
+.event:hover {
+  cursor: pointer;
+}
+
+.event-title,
+.event-more {
   color: white;
   font-size: 1rem;
 }
@@ -40,4 +106,43 @@ body {
 .event-details {
   color: #999;
   font-size: .8rem;
+}
+
+.event-more {
+  margin-top: 20px;
+  font-size: .8rem;
+}
+
+.event-links {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.event-links span {
+  display: inline-block;
+  width: 44%;  
+  padding: 5px;
+
+  background-color: #333;
+}
+
+.soundcloud-links {
+  margin-bottom: 10px;
+}
+
+.soundcloud-links span,
+.hotel-links span {
+  display: inline-block;
+  width: 25%;  
+  padding: 2px;
+
+  background-color: #333;
+  text-align: center;
+}
+
+.hide {
+  display: none;
 }

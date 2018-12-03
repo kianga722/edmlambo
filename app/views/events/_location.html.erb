@@ -3,32 +3,79 @@
     Change Locations
   </div>
   <div class='location-current'>
-    New York
+    <% @locationsAdded.each do |location| %>
+      <span>
+        <%= location %>
+      </span>
+    <% end %>
   </div>
 </section>
 
 
-<div class='popup-bg'></div>
+<div id='popup-bg' class=''></div>
 
-<div class='location-popup-wrapper'>
+<div id='location-popup-wrapper'>
 
-  <div class='location-popup'>
+  <div id='location-popup' class=''>
+
+    <div class='popup-close'>
+      x
+    </div>
+
     <div class='location-title'>
       Add Locations
     </div>
-    <input type='text' placeholder='Search for city or state'>
-    <div class='location-search'>Submit</div>
-    <div class='location-preselect'>
-      <span>
-        USA
-      </span>
-      <span>
-        Canada
-      </span>
-      <span>
-        Cities
-      </span>
+
+    <div class='search-wrapper'>
+      <input type='text' placeholder='Search for city or state'>
+      <div class='search-submit'></div>
     </div>
+
+    <div class='location-preselect'>
+      <%= render 'states_dropdown' %>
+      <%= render 'canada_dropdown' %>
+      <%= render 'cities_dropdown' %>
+    </div>
+
+    <div class='location-remove-title'>
+      Remove Locations
+    </div>
+
+    <!--
+    <div class='location-added'>
+      <% @locationsAdded.each do |location| %>
+        <div class='location-item'>
+          <span class='checkbox checked'></span>
+          <span><%= location %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class='done'>
+      Done
+    </div>
+
+-->
+
+    <form class='location-added' action='/events' method='post' data-remote='true'>
+      <input type='hidden' name='_method' value='PUT'>
+      
+      <div class='location-item-wrapper'>
+        <% @locationsAdded.each do |location| %>
+          <div class='location-item'>
+            <input type='checkbox' name='<%= location %>' checked='checked'>
+            <label for='<%= location %>'></label>
+            <%= location %>
+          </div>
+        <% end %>
+      </div>
+
+      <input type='submit' class='done' value='Done'>
+    </form>
+
+
+
+
   </div>
 
 </div>

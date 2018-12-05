@@ -2,21 +2,24 @@
   <div class='location-change'>
     Change Locations
   </div>
-  <div class='location-current'>
-    <% @locationsAdded.each do |location| %>
-      <span>
-        <%= location %>
-      </span>
-    <% end %>
-  </div>
+
+  <form class='location-current' action='/events' method='post' data-remote='true'>
+    <% @locationsToggle.each do |location| %>
+      <input type='submit' class='location-option <%= location[1] %>' name='locationClicked' value='<%= location[0] %>'>
+
+      <input type='hidden' name='<%= location[0] %>' value='<%= location[1] %>'>
+
+    <% end %>    
+  </form>
+
 </section>
 
 
-<div id='popup-bg' class=''></div>
+<div id='popup-bg' class='hide'></div>
 
 <div id='location-popup-wrapper'>
 
-  <div id='location-popup' class=''>
+  <div id='location-popup' class='hide'>
 
     <div class='popup-close'>
       x
@@ -27,7 +30,7 @@
     </div>
 
     <div class='search-wrapper'>
-      <input type='text' placeholder='Search for city or state'>
+      <input class='search-box' type='text' placeholder='Search for city or state'>
       <div class='search-submit'></div>
     </div>
 
@@ -41,22 +44,6 @@
       Remove Locations
     </div>
 
-    <!--
-    <div class='location-added'>
-      <% @locationsAdded.each do |location| %>
-        <div class='location-item'>
-          <span class='checkbox checked'></span>
-          <span><%= location %></span>
-        </div>
-      <% end %>
-    </div>
-
-    <div class='done'>
-      Done
-    </div>
-
--->
-
     <form class='location-added' action='/events' method='post' data-remote='true'>
       <input type='hidden' name='_method' value='PUT'>
       
@@ -66,11 +53,14 @@
             <input type='checkbox' name='<%= location %>' checked='checked'>
             <label for='<%= location %>'></label>
             <%= location %>
+
+            <input type='hidden' name='<%= location %>_current' value='current'>
+
           </div>
         <% end %>
       </div>
 
-      <input type='submit' class='done' value='Done'>
+      <input type='submit' id='submit' class='done' value='Done'>
     </form>
 
 

@@ -6,8 +6,13 @@ if (<%= @renderPage %>) {
     <%= escape_javascript( render('event-list')) %>
   `;
 
-  //Re-initialize event listeners
-  eventsInit();
+  //Initialize slider
+  sliderLogic.sliderInit();
 
+  //Re-initialize event listeners
+  eventsLogic.eventsInit();
+
+  //Filter if had previous terms
+  eventsLogic.filter();
 
 }

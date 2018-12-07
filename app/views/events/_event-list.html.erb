@@ -1,12 +1,73 @@
 <section class='event-list'>
 
   <% if @events.length < 1 %>
+    <% if @filter != '' %>
+      <div class='filter-wrapper'>
+        <div class='filter-icon-bg'></div>
+        <div class='filter-icon'></div>
+        <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..' value='<%= @filter %>'>
+      </div>
+    <% else %>
+      <div class='filter-wrapper hide'>
+        <div class='filter-icon-bg'></div>
+        <div class='filter-icon'></div>
+        <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..'>
+      </div>
+    <% end %>
+
     <div class='no-events'>
-      No locations are selected
+      No locations are selected.
     </div>
   
   <% else %>
 
+    <% if @eventSlider.length > 0 %>
+      <div class='recent-container'>
+        <div class='recent-title'>
+          Recently Added
+        </div>
+        <div class='recent-slider-frame'>
+
+          <div class='recent-slider'>
+            <% @eventSlider.each do |slide| %>
+              <div data-id='<%= slide.id %>' class='event-slide'>
+                <div class='slide-date'>
+                  <%= DateTime.parse(slide.date).strftime('%a, %b %d') %>
+                </div>
+                <div class='slide-title'>
+                  <%= slide.title %>
+                </div>
+                <div class='slide-venue'>
+                  <%= slide.venue %>
+                </div>
+                <div class='slide-sep'>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <div class='slide-left hide'>
+          </div>
+          <div class='slide-right'>
+          </div>
+
+        </div>
+
+      </div>
+    <% end %>
+
+
+    <div class='filter-wrapper'>
+      <div class='filter-icon-bg'></div>
+      <div class='filter-icon'></div>
+      <% if @filter %>
+        <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..' value='<%= @filter %>'>
+      <% else %>
+        <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..'>
+      <% end %>
+    </div>
+
+    <div class='list-wrapper'>
     <% @dates.each do |date| %>
       <div class='day'>
         <%= DateTime.parse(date).strftime('%a, %b %d') %>
@@ -14,7 +75,7 @@
 
       <% @events.each do |event| %>
         <% if event.date == date %>
-          <div class='event'>
+          <div id='<%= event.id %>' class='event' data-date='<%= DateTime.parse(date).strftime('%b %d') %>' >
 
             <div class='event-title'>
               <%= event.title %>
@@ -72,6 +133,10 @@
       <% end %>
 
     <% end %>
+    </div>
+    <div class='no-match hide'>
+      No matching events found in this area.
+    </div>
 
   <% end %>
 

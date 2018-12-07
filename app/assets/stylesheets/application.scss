@@ -146,7 +146,7 @@ Change Locations
   position: relative;
 }
 
-input[type='text'] {
+.search-wrapper input[type='text'] {
   width: 100%;
   padding: 11px 15px;
 
@@ -288,6 +288,168 @@ Dropdown Styling
 .dropdown-item:hover {
   background-color: #33cccc;
 }
+
+/*
+Event Slider Styling
+*/
+
+.recent-title {
+  padding-left: 30px;
+
+  color: white;
+  font-size: .9rem;
+  background: #008585 url('bg_recent') no-repeat;
+  background-size: 100% 100%;
+}
+
+.recent-slider-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 100%;
+
+  background: black url('slide_left') no-repeat;
+  background-size: auto 22px;
+  background-position: 10px center;
+}
+
+.slide-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 100%;
+
+  background: black url('slide_right') no-repeat;
+  background-size: auto 22px;
+  background-position: 10px center;
+}
+
+.slide-left,
+.slide-right {
+  cursor: pointer;
+}
+
+
+.recent-slider {
+  height: 110px;
+}
+
+.event-slide {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 240px;
+  height: 100%;
+  float: left;
+}
+
+.event-slide {
+  cursor: pointer;
+}
+
+.slide-date,
+.slide-title,
+.slide-venue {
+  text-align: center;
+}
+
+.slide-date,
+.slide-venue {
+  color: #aaa;
+  font-size: .8rem;
+}
+
+.slide-title {
+  color: #d5d5d5;
+}
+
+.slide-sep {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  top: 0;
+  right: -1px;
+  
+  background: url('slide_sep') no-repeat;
+  background-size: 2px 100%;
+}
+
+/*
+Filter bar Styling
+*/
+
+.filter-wrapper {
+  position: relative;
+  margin: 15px 0 20px;
+}
+
+.filter-icon-bg,
+.filter-icon,
+.filter-x {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 32px;
+  padding-right: 5px;
+
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.filter-icon-bg {
+  background-color: #555;
+}
+
+.filter-icon {
+  background: #555 url('search_icon') no-repeat center center;
+  background-size: auto 20px;
+}
+
+.filter-x {
+  filter: brightness(3.5);
+
+  background: url('x') no-repeat center center;
+  background-size: auto 20px;
+}
+
+.filter-icon:hover {
+  cursor: pointer;
+}
+
+.filter-wrapper input[type='text'] {
+  width: 100%;
+  height: 32px;
+  padding-left: 44px;
+
+  color: #0aa;
+  background: transparent;
+  border: 1px solid #222;
+  font-size: .9rem;
+  border-radius: 5px;
+}
+
+.filter-box::placeholder {
+  color: #a5a5a5;
+}
+
+.no-match {
+  margin-top: 6%;
+
+  text-align: center;
+  color: white;
+}
+
+
 
 
 /*

@@ -32,7 +32,75 @@ body {
 }
 
 /*
-Change Locations
+Nav Styling
+*/
+
+.tabs {
+  position: relative;
+}
+
+.tabs span {
+  vertical-align: -17px;
+}
+
+.tab-cities,
+.tab-festivals,
+.tab-tours {
+  display: inline-block;
+  height: 55px;
+
+  color: #a0dddd;
+  font-weight: 900;
+}
+
+.tab-cities {
+  padding-left: 42px;
+
+  background: url(<%= asset_path 'cities.png' %>) no-repeat;
+  background-size: auto 33px;
+  background-position: 10px center;
+}
+
+.tab-festivals {
+  margin-left: 50px;
+  padding-left: 50px;
+
+  background: url(<%= asset_path 'festivals.png' %>) no-repeat;
+  background-size: auto 33px;
+  background-position: 10px center;
+}
+
+.tab-tours {
+  margin-left: 50px;
+  padding-left: 50px;
+
+  background: url(<%= asset_path 'tours.png' %>) no-repeat;
+  background-size: auto 35px;
+  background-position: 10px center;
+}
+
+.logo {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  width: 45px;
+  height: 45px;
+  margin-top: 6px;
+
+  background: transparent url(<%= asset_path 'logo.png' %>) no-repeat center center;
+  background-size: contain;
+}
+
+.tab-cities,
+.tab-festivals,
+.tab-tours,
+.logo:hover {
+  cursor: pointer,
+}
+
+
+/*
+Change Locations Styling
 */
 
 .location-wrapper {
@@ -49,7 +117,7 @@ Change Locations
   display: inline-block;
   padding-right: 19px;
 
-  background: url(<%= 'arrow_right.png' %>) no-repeat center right;
+  background: url(<%= 'arrow_right.png' %>)no-repeat center right;
   background-size: auto 15px;
 }
 
@@ -115,14 +183,22 @@ Change Locations
 
 .popup-close {
   position: absolute;
-  top: -6px;
-  right: -5px;
-  padding: 0px 8px;
+  top: -7px;
+  right: -7px;
+  width: 28px;
+  height: 28px;
+  padding: 7px;
 
-  background-color: #ddd;
-  border-radius: 17px;
-  font-weight: 700;
-  font-size: 1.2rem;
+  background: #ddd;
+  border-radius: 15px;
+}
+
+.popup-icon {
+  width: 100%;
+  height: 100%;
+
+  background: url(<%= 'x.png' %>) no-repeat center right;
+  background-size: auto 13px;
 }
 
 .popup-close:hover {
@@ -317,6 +393,7 @@ Event Slider Styling
   background: black url(<%= asset_path 'slide_left.png' %>) no-repeat;
   background-size: auto 22px;
   background-position: 10px center;
+  z-index: 2;
 }
 
 .slide-right {
@@ -329,6 +406,7 @@ Event Slider Styling
   background: black url(<%= asset_path 'slide_right.png' %>) no-repeat;
   background-size: auto 22px;
   background-position: 10px center;
+  z-index: 2;
 }
 
 .slide-left,
@@ -356,10 +434,24 @@ Event Slider Styling
   cursor: pointer;
 }
 
+.slide-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  background-image: url(<%= asset_path 'zhu.jpg' %>);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 40%;
+  opacity: 0.3;
+  z-index: 1;
+}
+
 .slide-date,
 .slide-title,
 .slide-venue {
   text-align: center;
+  z-index: 2;
 }
 
 .slide-date,
@@ -381,6 +473,7 @@ Event Slider Styling
   
   background: url(<%= asset_path 'slide_sep.png' %>) no-repeat;
   background-size: 2px 100%;
+  z-index: 1;
 }
 
 /*
@@ -465,7 +558,7 @@ Event List Styling
 }
 
 .day {
-  margin: 10px 0 5px 20px;
+  margin: 21px 0 5px 20px;
 
   color: #ddb0a0;
   border-bottom: 1px solid #ddb0a0;
@@ -473,11 +566,29 @@ Event List Styling
 
 .event {
   position: relative;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .event:hover {
   cursor: pointer;
+}
+
+.event-pic {
+  position: absolute;
+  width: 59px;
+  height: 59px;
+
+  background-image: url(<%= asset_path 'avicii.jpg' %>);
+  background-size: 100% auto;
+}
+
+.event-title {
+  padding-top: 8px;
+}
+
+.event-title,
+.event-details {
+  margin-left: 69px;
 }
 
 .event-title,
@@ -495,9 +606,9 @@ Event List Styling
   position: absolute;
   width: 49px;
   height: 49px;
-  top: 0;
+  top: 5px;
   right: 0;
-  opacity: 0.7;
+  opacity: 0.5;
 
   background: url(<%= asset_path 'arrow_right.png' %>) no-repeat;
   background-position: 25px 13px;
@@ -506,6 +617,7 @@ Event List Styling
 
 .event-more {
   margin-top: 20px;
+  margin-bottom: 32px;
   font-size: .8rem;
 }
 

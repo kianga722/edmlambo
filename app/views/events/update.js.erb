@@ -2,6 +2,7 @@ if (<%= @renderPage %>) {
   const page = document.querySelector('.page');
 
   page.innerHTML = `
+    <%= escape_javascript( render('nav')) %>
     <%= escape_javascript( render('location')) %>
     <%= escape_javascript( render('event-list')) %>
   `;

@@ -131,7 +131,7 @@ const eventsLogic = (() => {
       for (let i=0; i<eventList.children.length; i+=1) {
         let event = eventList.children[i];
         if (event.classList.contains('event')) {
-          event.children[3].classList.add('hide');
+          event.children[4].classList.add('hide');
         }
       }
     }
@@ -192,8 +192,8 @@ const eventsLogic = (() => {
         let child = eventList.children[i];
         if (child.classList.contains('event')) {
           let date = child.dataset.date.toLowerCase();
-          let title = child.children[0].innerHTML.toLowerCase();
-          let venue = child.children[1].children[0].innerHTML.toLowerCase();
+          let title = child.children[1].innerHTML.toLowerCase();
+          let venue = child.children[2].children[0].innerHTML.toLowerCase();
 
           if (!date.includes(term) && !title.includes(term) && !venue.includes(term)) {
             child.classList.add('hide');
@@ -207,14 +207,14 @@ const eventsLogic = (() => {
       }
       //Remove all days that dont have events in them
       hideDays(dateArr);   
-      //Change filter icon to X
-      filterIcon.classList.add('filter-x');
       //Render no matches page if nothing found
       if (dateArr < 1) {
         const noMatch = document.querySelector('.no-match');
         noMatch.classList.remove('hide');
       }
     }
+    //Always change filter icon to X regardless of event listing
+    filterIcon.classList.add('filter-x');
   }
 
   //Function to pass previous filter terms to update/toggle form submission
@@ -330,10 +330,10 @@ const eventsLogic = (() => {
       //Determine what was clicked
       if (target.parentNode.classList.contains('event')) {
         //if click on event title
-        eventMore = target.parentNode.children[3];
+        eventMore = target.parentNode.children[4];
       } else if (target.parentNode.parentNode.classList.contains('event')) {
         //if click on event location
-        eventMore = target.parentNode.parentNode.children[3];
+        eventMore = target.parentNode.parentNode.children[4];
       } else {
         return;
       }
@@ -491,7 +491,7 @@ const sliderLogic = (() => {
     event.scrollIntoView({block: 'center'});
     //Expand event by simulating click
     eventsLogic.eventHider();
-    event.children[3].classList.remove('hide');
+    event.children[4].classList.remove('hide');
   }
 
   //Initialize slider width

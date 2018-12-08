@@ -4,20 +4,32 @@
     <% if @filter != '' %>
       <div class='filter-wrapper'>
         <div class='filter-icon-bg'></div>
-        <div class='filter-icon'></div>
+        <div class='filter-icon '></div>
         <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..' value='<%= @filter %>'>
       </div>
+
+      <div class='no-match'>
+        No matching events found in this area.
+      </div>
+
     <% else %>
       <div class='filter-wrapper hide'>
         <div class='filter-icon-bg'></div>
         <div class='filter-icon'></div>
         <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..'>
       </div>
-    <% end %>
 
-    <div class='no-events'>
-      No locations are selected.
-    </div>
+      <% if (@locationsToggle.length > 1) ||(@locationsToggle.length === 1 && @locationsToggle[0][1] === 'active') %>
+        <div class='no-events'>
+          No events found in this area.
+        </div>
+      <% else %>
+        <div class='no-events'>
+          No locations are selected.
+        </div>
+      <% end %>
+
+    <% end %>
   
   <% else %>
 
@@ -31,6 +43,8 @@
           <div class='recent-slider'>
             <% @eventSlider.each do |slide| %>
               <div data-id='<%= slide.id %>' class='event-slide'>
+                <div class='slide-bg'>
+                </div>
                 <div class='slide-date'>
                   <%= DateTime.parse(slide.date).strftime('%a, %b %d') %>
                 </div>
@@ -76,6 +90,9 @@
       <% @events.each do |event| %>
         <% if event.date == date %>
           <div id='<%= event.id %>' class='event' data-date='<%= DateTime.parse(date).strftime('%b %d') %>' >
+
+            <div class='event-pic'>
+            </div>
 
             <div class='event-title'>
               <%= event.title %>
@@ -139,5 +156,8 @@
     </div>
 
   <% end %>
+
+
+
 
 </section>

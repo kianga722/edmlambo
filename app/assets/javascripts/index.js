@@ -1,5 +1,14 @@
 //Event Logic Module
 const eventsLogic = (() => {
+  //Function to Unhide Change Location popup
+  const unHidePopup = e => {
+    const popupBG = document.getElementById('popup-bg');
+    const popupLocation = document.getElementById('location-popup');
+    popupBG.classList.remove('hide');
+    popupLocation.classList.remove('hide');
+    e.stopImmediatePropagation();
+  }
+
   //Add locations through popup options
 
   //Function to check for duplicate locations
@@ -104,6 +113,18 @@ const eventsLogic = (() => {
       searchBox.placeholder='Location not found!';
     }
   }
+
+  //Function to Checkbox logic
+  const checkboxRemove = e => {
+    target = e.target;
+    if (target.classList.contains('location-item')) {
+      target.children[0].checked = (target.children[0].checked === true ? false : true);       
+      return;
+    }
+    if (target.parentNode.classList.contains('location-item')) {
+      target.parentNode.children[0].checked = (target.parentNode.children[0].checked === true ? false : true);
+    }
+  }
   
   //Exit Change Location popup
   //Same as clicking submit button to send data
@@ -122,6 +143,27 @@ const eventsLogic = (() => {
     popupLocation.classList.add('hide');
   }
 
+  //Function to hide popup outside popup box
+  const popupHiderOutside = e => {
+    let target = e.target;
+
+    const popupBG = document.getElementById('popup-bg');
+    if (!popupBG.classList.contains('hide')) {
+      if (target.id === 'location-popup'
+        ||target.parentNode.id === 'location-popup'
+        ||target.parentNode.parentNode.id === 'location-popup'
+        ||target.parentNode.parentNode.parentNode.id === 'location-popup'
+        ||target.parentNode.parentNode.parentNode.parentNode.id === 'location-popup')
+      {
+        return;
+      } else {
+        locationSubmit();
+        popupHider();
+      }
+    }
+  }
+
+
   //Event List Rendering
 
   //Function that goes through all events and hides them
@@ -134,6 +176,33 @@ const eventsLogic = (() => {
           event.children[4].classList.add('hide');
         }
       }
+    }
+  }
+
+  //Function that expands event info
+  const eventExpand = e => {
+    target = e.target;
+    let eventMore;
+    //Determine what was clicked
+    //Do not hide when clicking in expanded space
+    if (target.parentNode.classList.contains('event') && !target.classList.contains('event-more')) {
+      //if click on event title
+      eventMore = target.parentNode.children[4];
+    } else if (target.parentNode.parentNode.classList.contains('event') && !target.parentNode.classList.contains('event-more')) {
+      //if click on event location
+      eventMore = target.parentNode.parentNode.children[4];
+    } else {
+      return;
+    }
+
+    //Hide if clicking on already unhidden event
+    if (!eventMore.classList.contains('hide')) {
+      eventMore.classList.add('hide');
+    } else {
+      //Hide all previous events
+      eventHider();
+      //Show info on selected
+      eventMore.classList.remove('hide');
     }
   }
 
@@ -247,11 +316,7 @@ const eventsLogic = (() => {
     //Event Listener to Unhide Change Location popup
     const locationChange = document.querySelector('.location-change');
     locationChange.addEventListener('click', e => {
-      const popupBG = document.getElementById('popup-bg');
-      const popupLocation = document.getElementById('location-popup');
-      popupBG.classList.remove('hide');
-      popupLocation.classList.remove('hide');
-      e.stopImmediatePropagation();
+      unHidePopup(e);
     })
 
     //Event Listener for dropdown menus
@@ -277,14 +342,7 @@ const eventsLogic = (() => {
     //Event Listener for checkbox logic
     const locationRemove = document.querySelector('.location-added');
     locationRemove.addEventListener('click', e => {
-      target = e.target;
-      if (target.classList.contains('location-item')) {
-        target.children[0].checked = (target.children[0].checked === true ? false : true);       
-        return;
-      }
-      if (target.parentNode.classList.contains('location-item')) {
-        target.parentNode.children[0].checked = (target.parentNode.children[0].checked === true ? false : true);
-      }
+      checkboxRemove(e);
     })
     //Event Listener to prevent Refresh after submit
     locationRemove.addEventListener('submit', e => {
@@ -304,49 +362,13 @@ const eventsLogic = (() => {
     })
     //Event Listener for outside popup box
     document.body.addEventListener('click', e => {
-      let target = e.target;
-
-      const popupBG = document.getElementById('popup-bg');
-      if (!popupBG.classList.contains('hide')) {
-        if (target.id === 'location-popup'
-          ||target.parentNode.id === 'location-popup'
-          ||target.parentNode.parentNode.id === 'location-popup'
-          ||target.parentNode.parentNode.parentNode.id === 'location-popup'
-          ||target.parentNode.parentNode.parentNode.parentNode.id === 'location-popup')
-        {
-          return;
-        } else {
-          locationSubmit();
-          popupHider();
-        }
-      }
+      popupHiderOutside(e);
     })
 
     //Event Listeners to each event to expand info
     const eventList = document.querySelector('.event-list');
     eventList.addEventListener('click', e => {
-      target = e.target;
-      let eventMore;
-      //Determine what was clicked
-      if (target.parentNode.classList.contains('event')) {
-        //if click on event title
-        eventMore = target.parentNode.children[4];
-      } else if (target.parentNode.parentNode.classList.contains('event')) {
-        //if click on event location
-        eventMore = target.parentNode.parentNode.children[4];
-      } else {
-        return;
-      }
-
-      //Hide if clicking on already unhidden event
-      if (!eventMore.classList.contains('hide')) {
-        eventMore.classList.add('hide');
-      } else {
-        //Hide all previous events
-        eventHider();
-        //Show info on selected
-        eventMore.classList.remove('hide');
-      }
+      eventExpand(e); 
     })
 
     //Event Listener for filtering after every input

@@ -81,6 +81,8 @@
       <% end %>
     </div>
 
+
+
     <div class='list-wrapper'>
     <% @dates.each do |date| %>
       <div class='day'>
@@ -113,8 +115,14 @@
               </span>
             </div>
 
-            <div class='arrow'>
-            </div>
+            <% if @eventNew.include? event %>
+              <div class='arrow-link new'>
+                new
+              </div>
+            <% else %>
+              <div class='arrow-link arrow'>
+              </div>
+            <% end %>
 
             <div class='event-more hide'>
               <div class='event-links'>

@@ -174,11 +174,12 @@ Change Locations Styling
   position: absolute;
   width: 75%;
   padding: 10px 25px 15px;
-  z-index: 999;
+  margin-top: -10%;
 
   border-radius: 10px;
   background-color: #ddd;
   text-align: center;
+  z-index: 999;
 }
 
 .popup-close {
@@ -613,6 +614,16 @@ Event List Styling
   background: url(<%= asset_path 'arrow_right.png' %>) no-repeat;
   background-position: 25px 13px;
   background-size: auto 15px;
+}
+
+.new {
+  position: absolute;
+  right: 0;
+  top: 12px;
+
+  transform: rotate(45deg);
+  color: #ddb0a0;
+  font-size: 700;
 }
 
 .event-more {

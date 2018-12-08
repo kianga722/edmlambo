@@ -16,11 +16,14 @@ class EventsController < ApplicationController
     end
 
     #Prepare variables to render
-    @events = get_events(@locationsToggle, false)
+    @events = get_events(@locationsToggle)
     @dates = get_dates(@events)
 
     #Prepare events for slider
     @eventSlider = get_events(@locationsToggle, true)
+
+    #Prepare new tags
+    @eventNew = get_events(@locationsToggle, false, true)
 
   end
 
@@ -48,11 +51,14 @@ class EventsController < ApplicationController
     @filter = params[:filterTerm];
 
     #Prepare variables to render
-    @events = get_events(@locationsToggle, false)
+    @events = get_events(@locationsToggle)
     @dates = get_dates(@events)
 
     #Prepare events for slider
     @eventSlider = get_events(@locationsToggle, true)
+
+    #Prepare new tags
+    @eventNew = get_events(@locationsToggle, false, true)
 
     #Render
     respond_to do |format|
@@ -86,11 +92,14 @@ class EventsController < ApplicationController
     @filter = params[:filterTerm];
 
     #Prepare variables to render
-    @events = get_events(@locationsToggle, false)
+    @events = get_events(@locationsToggle)
     @dates = get_dates(@events)
 
     #Prepare events for slider
     @eventSlider = get_events(@locationsToggle, true)
+
+    #Prepare new tags
+    @eventNew = get_events(@locationsToggle, false, true)
 
     #Render
     respond_to do |format|
@@ -246,17 +255,21 @@ class EventsController < ApplicationController
   end
 
   #Get event list
-  def get_events(locationsToggle, recent) 
+  def get_events(locationsToggle, recent=false, newEvent=false) 
     #Use active array to only show active events
     locationsActive = findActive(locationsToggle)
     #Prepare locations for get_events function
     locations_edit = locationsPrepare(locationsActive)
     #See if states in locations_edit array and on or after current date
-    today = Time.now.strftime('%Y-%m-%d')
+    today = Time.now.strftime('%Y-%m-%d');
     #Decide which array to return
     if recent
       #Array of recent events max 10
-      return Event.order(added: :desc).where(state: locations_edit).where('date >= ?', today).limit(10)
+      return Event.order(added: :desc).where(state: locations_edit).where('date >= ?', today).limit(10);
+    elsif newEvent
+      #Array of recently added events no older than last week
+      lastWeek = (Time.now - (7*24*60*60)).strftime('%Y-%m-%d');
+      return Event.order(added: :desc).where(state: locations_edit).where('date >= ?', today).where('added >= ?', lastWeek);
     else
       #Array of all events found
       return Event.order(:date).where(state: locations_edit).where('date >= ?', today)

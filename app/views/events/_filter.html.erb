@@ -1,0 +1,21 @@
+<!-- Only show filter bar if at least 1 location is active and and an event exists -->
+
+<% if !@togglesInactive && @events.length > 0 %>
+
+  <div class='filter-wrapper'>
+    <div class='filter-icon-bg'></div>
+    <div class='filter-icon '></div>
+
+    <% if @filter != nil && @filter != '' %>
+      <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..' value='<%= @filter %>'>
+    <% else %>
+      <input class='filter-box' type='text' placeholder='Filter events by artist, venue, date, ..'>
+    <% end %>
+
+  </div>
+
+<% else %>
+
+  <div class='filter-wrapper hide'></div>
+
+<% end %>

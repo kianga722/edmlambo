@@ -367,10 +367,11 @@ Dropdown Styling
 }
 
 /*
-Event Slider Styling
+Event Slider and Fav Slider Styling
 */
 
-.recent-title {
+.recent-title,
+.fav-title {
   padding-left: 30px;
 
   color: white;
@@ -379,12 +380,14 @@ Event Slider Styling
   background-size: 100% 100%;
 }
 
-.recent-slider-frame {
+.recent-slider-frame,
+.fav-slider-frame {
   position: relative;
   overflow: hidden;
 }
 
-.slide-left {
+.slide-left,
+.fav-slide-left {
   position: absolute;
   top: 0;
   left: 0;
@@ -397,7 +400,8 @@ Event Slider Styling
   z-index: 2;
 }
 
-.slide-right {
+.slide-right,
+.fav-slide-right {
   position: absolute;
   top: 0;
   right: 0;
@@ -411,41 +415,71 @@ Event Slider Styling
 }
 
 .slide-left,
-.slide-right {
+.slide-right,
+.fav-slide-left,
+.fav-slide-right {
   cursor: pointer;
 }
-
 
 .recent-slider {
   height: 110px;
 }
 
-.event-slide {
+.fav-slider {
+  height: 82px;
+}
+
+.event-slide,
+.fav-slide {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  width: 240px;
   height: 100%;
   float: left;
 }
 
 .event-slide {
+  justify-content: space-between;
+}
+
+.fav-slide {
+  justify-content: flex-start;
+}
+
+.event-slide {
+  width: 240px;
+}
+
+.fav-slide {
+  width: 110px;
+}
+
+.event-slide,
+.fav-slide {
   cursor: pointer;
 }
 
-.slide-bg {
+.slide-bg,
+.fav-slide-bg {
   position: absolute;
   width: 100%;
   height: 100%;
 
-  background-image: url(<%= asset_path 'zhu.jpg' %>);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 40%;
   opacity: 0.3;
   z-index: 1;
+}
+
+
+.slide-bg {
+  background-image: url(<%= asset_path 'zhu.jpg' %>);
+}
+
+.fav-slide-bg {
+  background-image: url(<%= asset_path 'slide_default.png' %>);
 }
 
 .slide-date,
@@ -626,26 +660,50 @@ Event List Styling
   font-size: 700;
 }
 
+.favorite {
+  position: absolute;
+  width: 49px;
+  height: 49px;
+  top: -8px;
+  right: 0;
+  opacity: 0.5;
+
+  background: url(<%= asset_path 'fav.png' %>)no-repeat 13px 13px;
+  background-size: auto 32px;
+  border: none;
+}
+
+.favorite:hover {
+  cursor: pointer;
+}
+
+.saved {
+  opacity: 1;
+}
+
+
+
 .event-more {
   margin-top: 20px;
   margin-bottom: 32px;
-  font-size: .8rem;
+  font-size: .9rem;
 }
 
 .event-links {
   padding-bottom: 16px;
   margin-bottom: 16px;
 
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #666;
   text-align: center;
 }
 
 .event-links span {
   display: inline-block;
   width: 44%;  
-  padding: 5px;
+  padding: 7px;
 
   background-color: #333;
+  border-radius: 7px;
 }
 
 .soundcloud-links {
@@ -657,10 +715,29 @@ Event List Styling
   display: inline-block;
   width: 25%;  
   padding: 2px;
+  border-radius: 3px;
 
   background-color: #333;
   text-align: center;
 }
+
+.event-more .event-website,
+.event-more .soundcloud-artist,
+.event-more .airbnb-link {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0; 
+}
+
+.event-more .event-map,
+.event-more .soundcloud-link,
+.event-more .airbnb-share {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0; 
+  border-left: 1px solid black;
+}
+
+
+
 
 
 /*

@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
 
+  #Homepage
   def index
     #Check if have location cookies
     #Set default to New York otherwise
@@ -15,18 +16,33 @@ class EventsController < ApplicationController
       cookies.permanent.encrypted[:locationsToggle] = JSON.dump(@locationsToggle)
     end
 
+    #Prepare favorite cookies for slider
+    if (cookies.encrypted[:favsArr])
+      favsArr = JSON.load(cookies.encrypted[:favsArr])
+    else
+      favsArr = []
+      cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+    end
+    #Get event arr from list of event IDs
+    @eventFavs = get_favs(favsArr)
+
+    #Prepare variables to check
+    @eventsNoFavs = get_events(@locationsToggle)
+    @togglesInactive = isAllInactive(@locationsToggle)
+
     #Prepare variables to render
-    @events = get_events(@locationsToggle)
+    @events = get_events(@locationsToggle, false, false, favsArr)
     @dates = get_dates(@events)
 
     #Prepare events for slider
-    @eventSlider = get_events(@locationsToggle, true)
+    @eventSlider = get_events(@locationsToggle, true, false, favsArr)
 
     #Prepare new tags
-    @eventNew = get_events(@locationsToggle, false, true)
+    @eventNew = get_events(@locationsToggle, false, true, favsArr)
 
   end
 
+  #Location Popup
   def update
     #Get current locations before change
     locationsCurrent = get_locationsCurrent(params)
@@ -50,15 +66,32 @@ class EventsController < ApplicationController
     #Get previous filter terms
     @filter = params[:filterTerm];
 
+    #Prepare favorite cookies for slider
+    if (cookies.encrypted[:favsArr])
+      favsArr = JSON.load(cookies.encrypted[:favsArr])
+    else
+      favsArr = []
+      cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+    end
+    #Get event arr from list of event IDs
+    @eventFavs = get_favs(favsArr)
+
+
+    #Prepare variables to check
+    @eventsNoFavs = get_events(@locationsToggle)
+    @togglesInactive = isAllInactive(@locationsToggle)
+
     #Prepare variables to render
-    @events = get_events(@locationsToggle)
+    @events = get_events(@locationsToggle, false, false, favsArr)
     @dates = get_dates(@events)
 
     #Prepare events for slider
-    @eventSlider = get_events(@locationsToggle, true)
+    @eventSlider = get_events(@locationsToggle, true, false, favsArr)
 
     #Prepare new tags
-    @eventNew = get_events(@locationsToggle, false, true)
+    @eventNew = get_events(@locationsToggle, false, true, favsArr)
+
+    
 
     #Render
     respond_to do |format|
@@ -67,6 +100,7 @@ class EventsController < ApplicationController
 
   end
 
+  #Toggle Location
   def create
     #Create location arrays
     locationsToggleOld = []
@@ -91,15 +125,31 @@ class EventsController < ApplicationController
     #Get previous filter terms
     @filter = params[:filterTerm];
 
+    #Prepare favorite cookies for slider
+    if (cookies.encrypted[:favsArr])
+      favsArr = JSON.load(cookies.encrypted[:favsArr])
+    else
+      favsArr = []
+      cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+    end
+    #Get event arr from list of event IDs
+    @eventFavs = get_favs(favsArr)
+
+
+    #Prepare variables to check
+    @eventsNoFavs = get_events(@locationsToggle)
+    @togglesInactive = isAllInactive(@locationsToggle)
+
     #Prepare variables to render
-    @events = get_events(@locationsToggle)
+    @events = get_events(@locationsToggle, false, false, favsArr)
     @dates = get_dates(@events)
 
     #Prepare events for slider
-    @eventSlider = get_events(@locationsToggle, true)
+    @eventSlider = get_events(@locationsToggle, true, false, favsArr)
 
     #Prepare new tags
-    @eventNew = get_events(@locationsToggle, false, true)
+    @eventNew = get_events(@locationsToggle, false, true, favsArr)
+
 
     #Render
     respond_to do |format|
@@ -108,7 +158,28 @@ class EventsController < ApplicationController
 
   end
 
+  #Favorites
+  def new
+    #Prepare favorites for slider
+    favsArr = JSON.load(cookies.encrypted[:favsArr])
+    eventID = params[:eventID].to_i
 
+    if favsArr.include? eventID
+      favsArr.delete(eventID)
+    else
+      favsArr.push(eventID)
+    end 
+    @eventFavs = get_favs(favsArr)
+
+    #Set fav cookies
+    cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+
+
+    respond_to do |format|
+      format.js
+    end
+
+  end
 
 
 
@@ -175,6 +246,13 @@ class EventsController < ApplicationController
       arrActive.push(arr[0]) if arr[1] === 'active'
     end
     return arrActive
+  end
+
+  #See if all toggles inactive
+  def isAllInactive(locationsToggle) 
+    arr = findActive(locationsToggle)
+    return true if arr.length === 0
+    return false
   end
 
   #Decide if rendering needed
@@ -255,7 +333,7 @@ class EventsController < ApplicationController
   end
 
   #Get event list
-  def get_events(locationsToggle, recent=false, newEvent=false) 
+  def get_events(locationsToggle, recent=false, newEvent=false, favsArr=[]) 
     #Use active array to only show active events
     locationsActive = findActive(locationsToggle)
     #Prepare locations for get_events function
@@ -265,14 +343,15 @@ class EventsController < ApplicationController
     #Decide which array to return
     if recent
       #Array of recent events max 10
-      return Event.order(added: :desc).where(state: locations_edit).where('date >= ?', today).limit(10);
+      return Event.where(state: locations_edit).or(Event.where(id: favsArr)).where('date >= ?', today).order(added: :desc).limit(10);
+      #return Event.order(added: :desc).where(state: locations_edit).where('date >= ?', today).limit(10);
     elsif newEvent
       #Array of recently added events no older than last week
       lastWeek = (Time.now - (7*24*60*60)).strftime('%Y-%m-%d');
-      return Event.order(added: :desc).where(state: locations_edit).where('date >= ?', today).where('added >= ?', lastWeek);
+      return Event.where(state: locations_edit).or(Event.where(id: favsArr)).where('date >= ?', today).where('added >= ?', lastWeek).order(added: :desc)
     else
       #Array of all events found
-      return Event.order(:date).where(state: locations_edit).where('date >= ?', today)
+      return Event.where(state: locations_edit).or(Event.where(id: favsArr)).where('date >= ?', today).order(:date)
     end
   end
 
@@ -283,6 +362,13 @@ class EventsController < ApplicationController
       dates.push(event.date) unless dates.include? event.date
     end
     return dates
+  end
+
+  #Get fav event list from event IDs 
+  def get_favs(favsArr)
+    favEventArr = Event.order(:date).where(id: favsArr)
+    return favEventArr if favEventArr.length > 0
+    return []
   end
 
   #Translate state abbreviations to full

@@ -1,0 +1,50 @@
+<!-- Only show recent slider if at least 1 location is active and an event exists -->
+
+<% if !@togglesInactive && @events.length > 0 %>
+
+  <div class='recent-container'>
+
+    <div class='recent-title'>
+      Recently Added
+    </div>
+
+    <div class='recent-slider-frame'>
+
+      <div class='recent-slider'>
+
+        <% @eventSlider.each do |slide| %>
+          <div data-id='<%= slide.id %>' class='event-slide'>
+
+            <div class='slide-bg'></div>
+
+            <div class='slide-date'>
+              <%= DateTime.parse(slide.date).strftime('%a, %b %d') %>
+            </div>
+
+            <div class='slide-title'>
+              <%= slide.title %>
+            </div>
+
+            <div class='slide-venue'>
+              <%= slide.venue %>
+            </div>
+
+            <div class='slide-sep'></div>
+
+          </div>
+        <% end %>
+
+      </div>
+
+      <div class='slide-left hide'></div>
+      <div class='slide-right'></div>
+
+    </div>
+
+  </div>
+
+<% else %>
+
+  <div class='recent-container hide'></div>
+
+<% end %>

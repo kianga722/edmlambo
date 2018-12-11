@@ -7,13 +7,19 @@ if (<%= @renderPage %>) {
     <%= escape_javascript( render('event-list')) %>
   `;
 
-  //Initialize slider
-  sliderLogic.sliderInit();
+  //Initialize Recent Slider
+  const recentSlider = document.querySelector('.recent-slider');
+  sliderLogic.sliderInit(recentSlider);
+
+  //Initialize Fav Slider
+  const favSlider = document.querySelector('.fav-slider');
+  sliderLogic.sliderInit(favSlider);
 
   //Re-initialize event listeners
   eventsLogic.eventsInit();
 
   //Filter if had previous terms
   eventsLogic.filter();
+
 
 }

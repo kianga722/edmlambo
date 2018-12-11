@@ -1,0 +1,116 @@
+<!-- Only show filter bar if at least 1 location is active and and an event exists -->
+
+<% if !@togglesInactive && @events.length > 0 %>
+
+  <div class='list-wrapper'>
+
+    <% @dates.each do |date| %>
+      <div class='day'>
+        <%= DateTime.parse(date).strftime('%a, %b %d') %>
+      </div>
+
+      <% @events.each do |event| %>
+        <% if event.date == date %>
+          <div id='<%= event.id %>' class='event' data-date='<%= DateTime.parse(date).strftime('%b %d') %>' >
+
+            <div class='event-pic'></div>
+
+            <div class='event-title'>
+              <%= event.title %>
+            </div>
+
+            <div class='event-details'>
+              <span>
+                <%= event.venue %>
+              </span>
+              <span>
+                &nbsp;-&nbsp;
+              </span>
+              <span>
+                <%= event.location %>
+              </span>
+              <span>
+                <%= event.ages %>
+              </span>
+            </div>
+
+  <!-- Favorite button -->
+            
+            <% if @eventFavs.include? event %>
+
+              <% if @eventNew.include? event %>
+                <div class='arrow-link new hide'>
+                  new
+                </div>
+              <% else %>
+                <div class='arrow-link arrow hide'>
+                </div>
+              <% end %>
+
+              <form class='favorite-wrapper' action='/events' method='new' data-remote='true'>
+                <input type='hidden' name='eventID' value='<%= event.id %>'>
+                <input type='submit' class='favorite saved' value=''>
+              </form>
+
+            <% else %>
+
+              <% if @eventNew.include? event %>
+                <div class='arrow-link new'>
+                  new
+                </div>
+              <% else %>
+                <div class='arrow-link arrow'>
+                </div>
+              <% end %>
+
+              <form class='favorite-wrapper hide' action='/events' method='new' data-remote='true'>
+                <input type='hidden' name='eventID' value='<%= event.id %>'>
+                <input type='submit' class='favorite' value=''>
+              </form>
+
+            <% end %>
+
+  <!-- Event More Details -->           
+
+            <div class='event-more hide'>
+
+              <div class='event-links'>
+                <span class='event-website'>
+                  Event Website
+                </span
+                ><span class='event-map'>
+                  Venue Map
+                </span>
+              </div>
+
+              <% event.artists.each do |artist| %>
+                <div class='soundcloud-links'>
+                  <span class='soundcloud-artist'>
+                    <%= artist.name %>
+                  </span
+                  ><span class='soundcloud-link'>
+                    SoundCloud
+                  </span>
+                </div>
+              <% end %>
+
+              <div class='hotel-links'>
+                <span class='airbnb-link'>
+                  Hotels & Airbnbs
+                </span
+                ><span class='airbnb-share'>
+                  Share
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+        <% end %>
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+<% end %>

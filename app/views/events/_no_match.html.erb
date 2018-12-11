@@ -1,0 +1,23 @@
+<!-- Show error messages if no locations are active or if no events even including favorites exist -->
+
+<% if @togglesInactive  %>
+
+  <div class='no-events'>
+    No locations are selected.
+  </div>
+
+<% elsif @events.length === 0 %>
+
+  <div class='no-events'>
+    No events found in this area.
+  </div>
+
+<% else %>
+
+<!-- Used for showing no matches when filtering -->
+
+  <div class='no-match hide'>
+    No matching events found in this area.
+  </div>
+
+<% end %>

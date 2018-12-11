@@ -1,0 +1,38 @@
+<!-- Only show favorites if at least 1 location is active and have at least 1 favorited event -->
+
+<% if @eventFavs.length > 0 %>
+
+    <div class='fav-title'>
+      Favorites
+    </div>
+
+    <div class='fav-slider-frame'>
+
+      <div class='fav-slider'>
+
+        <% @eventFavs.each do |fav| %>
+          <div data-id='<%= fav.id %>' class='fav-slide'>
+
+            <div class='fav-slide-bg'></div>
+            
+            <div class='slide-date'>
+              <%= DateTime.parse(fav.date).strftime('%a, %b %d') %>
+            </div>
+
+            <div class='slide-title'>
+              <%= fav.title[0,20] + '...' %>
+            </div>
+
+            <div class='slide-sep'></div>
+
+          </div>
+        <% end %>
+
+      </div>
+
+      <div class='fav-slide-left hide'></div>
+      <div class='fav-slide-right'></div>
+
+    </div>
+
+<% end %>

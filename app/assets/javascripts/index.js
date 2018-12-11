@@ -173,9 +173,25 @@ const eventsLogic = (() => {
       for (let i=0; i<eventList.children.length; i+=1) {
         let event = eventList.children[i];
         if (event.classList.contains('event')) {
-          event.children[4].classList.add('hide');
+          event.children[5].classList.add('hide');
         }
       }
+    }
+  }
+
+  //Function to decide favorite icon or arrow display 
+  const arrowFavDisplay = (eventMore) => {
+    let event = eventMore.parentNode;
+    let arrowLink = event.children[3];
+    let favorite = event.children[4];
+    //Check if specific eventMore is hidden and if it is a favorite
+    if (!eventMore.classList.contains('hide') 
+      || eventMore.parentNode.children[4].children[1].classList.contains('saved') ) {
+      arrowLink.classList.add('hide');
+      favorite.classList.remove('hide');
+    } else {
+      arrowLink.classList.remove('hide');
+      favorite.classList.add('hide');
     }
   }
 
@@ -185,18 +201,23 @@ const eventsLogic = (() => {
     let eventMore;
     //Determine what was clicked
     //Do not hide when clicking in expanded space
-    if (target.parentNode.classList.contains('event') && !target.classList.contains('event-more')) {
+    if (target.parentNode.classList.contains('event') 
+    && !target.classList.contains('event-more')
+    && !target.classList.contains('favorite')) {
       //if click on event title
-      eventMore = target.parentNode.children[4];
-    } else if (target.parentNode.parentNode.classList.contains('event') && !target.parentNode.classList.contains('event-more')) {
+      eventMore = target.parentNode.children[5];
+    } else if (target.parentNode.parentNode.classList.contains('event') 
+    && !target.parentNode.classList.contains('event-more')
+    && !target.classList.contains('favorite')) {
       //if click on event location
-      eventMore = target.parentNode.parentNode.children[4];
+      eventMore = target.parentNode.parentNode.children[5];
     } else {
       return;
     }
 
     //Hide if clicking on already unhidden event
-    if (!eventMore.classList.contains('hide')) {
+    if (!eventMore.classList.contains('hide') 
+     && !target.classList.contains('favorite')) {
       eventMore.classList.add('hide');
     } else {
       //Hide all previous events
@@ -204,6 +225,9 @@ const eventsLogic = (() => {
       //Show info on selected
       eventMore.classList.remove('hide');
     }
+
+    //Display favorite or arrow icon
+    arrowFavDisplay(eventMore);
   }
 
 
@@ -241,72 +265,92 @@ const eventsLogic = (() => {
   const filter = () => {
     //Get filterbox input
     const filterBox = document.querySelector('.filter-box');
-    term = filterBox.value.trim().toLowerCase();
-    const filterIcon = document.querySelector('.filter-icon');
-    //Unhide all if empty value
-    if (term === '') {
-      eventShowAll();
-      //Put magnifying icon back
-      filterIcon.classList.remove('filter-x');
-      return;
-    }
-    //Get current event list
-    const eventList = document.querySelector('.list-wrapper');
-
-    if (eventList) {
-      //Get array of dates with filtered events 
-      let dateArr = [];
-      //Check each event for date, artist, venue
-      for (let i=0; i<eventList.children.length; i+=1) {
-        let child = eventList.children[i];
-        if (child.classList.contains('event')) {
-          let date = child.dataset.date.toLowerCase();
-          let title = child.children[1].innerHTML.toLowerCase();
-          let venue = child.children[2].children[0].innerHTML.toLowerCase();
-
-          if (!date.includes(term) && !title.includes(term) && !venue.includes(term)) {
-            child.classList.add('hide');
-          } else {
-            if (!dateArr.includes(date)) {
-              dateArr.push(date);
+    if (filterBox) {
+      term = filterBox.value.trim().toLowerCase();
+      const filterIcon = document.querySelector('.filter-icon');
+      //Unhide all if empty value
+      if (term === '') {
+        eventShowAll();
+        //Put magnifying icon back
+        filterIcon.classList.remove('filter-x');
+        return;
+      }
+      //Get current event list
+      const eventList = document.querySelector('.list-wrapper');
+  
+      if (eventList) {
+        //Get array of dates with filtered events 
+        let dateArr = [];
+        //Check each event for date, artist, venue
+        for (let i=0; i<eventList.children.length; i+=1) {
+          let child = eventList.children[i];
+          if (child.classList.contains('event')) {
+            let date = child.dataset.date.toLowerCase();
+            let title = child.children[1].innerHTML.toLowerCase();
+            let venue = child.children[2].children[0].innerHTML.toLowerCase();
+  
+            if (!date.includes(term) && !title.includes(term) && !venue.includes(term)) {
+              child.classList.add('hide');
+            } else {
+              if (!dateArr.includes(date)) {
+                dateArr.push(date);
+              }
+              child.classList.remove('hide');
             }
-            child.classList.remove('hide');
           }
         }
+        //Remove all days that dont have events in them
+        hideDays(dateArr);   
+        //Render no matches page if nothing found
+        if (dateArr < 1) {
+          const noMatch = document.querySelector('.no-match');
+          noMatch.classList.remove('hide');
+        }
       }
-      //Remove all days that dont have events in them
-      hideDays(dateArr);   
-      //Render no matches page if nothing found
-      if (dateArr < 1) {
-        const noMatch = document.querySelector('.no-match');
-        noMatch.classList.remove('hide');
-      }
+      //Always change filter icon to X regardless of event listing
+      filterIcon.classList.add('filter-x');
     }
-    //Always change filter icon to X regardless of event listing
-    filterIcon.classList.add('filter-x');
   }
 
   //Function to pass previous filter terms to update/toggle form submission
   const filterGet = (parentEle) => {
     const filterBox = document.querySelector('.filter-box');
-    filterEle = document.createElement('input');
-    filterEle.type = 'hidden';
-    filterEle.name = 'filterTerm';
-    filterEle.value = filterBox.value;
-    parentEle.appendChild(filterEle);
+    if (filterBox) {
+      filterEle = document.createElement('input');
+      filterEle.type = 'hidden';
+      filterEle.name = 'filterTerm';
+      filterEle.value = filterBox.value;
+      parentEle.appendChild(filterEle);
+    }
   }
 
   //Function to determine effects of clicking the filter icon
   const changeIcon = () => { 
     const filterBox = document.querySelector('.filter-box');
     const filterIcon = document.querySelector('.filter-icon');
-    if (filterIcon.classList.contains('filter-x')) {
-      filterIcon.classList.remove('filter-x');
-      filterBox.value = '';
-      filterBox.focus();
-      filter();
-    } else {
-      filterBox.focus();
+    if (filterBox) {
+      if (filterIcon.classList.contains('filter-x')) {
+        filterIcon.classList.remove('filter-x');
+        filterBox.value = '';
+        filterBox.focus();
+        filter();
+      } else {
+        filterBox.focus();
+      }
+    }
+  }
+
+  //Function to light up fav icon
+  const favSave = (e) => {
+    let target = e.target;
+    let favIcon = target.children[1];
+
+    if (favIcon.classList.contains('favorite')) {
+      if (favIcon.classList.contains('saved')) {
+        favIcon.classList.remove('saved');
+      } else {
+        favIcon.classList.add('saved');
+      }
     }
   }
 
@@ -368,7 +412,7 @@ const eventsLogic = (() => {
     //Event Listeners to each event to expand info
     const eventList = document.querySelector('.event-list');
     eventList.addEventListener('click', e => {
-      eventExpand(e); 
+      eventExpand(e);
     })
 
     //Event Listener for filtering after every input
@@ -393,13 +437,25 @@ const eventsLogic = (() => {
 
     //Event Listener for clicking on filter icon
     const filterIcon = document.querySelector('.filter-icon');
-    filterIcon.addEventListener('click', () => {
-      changeIcon();
-    })
+    if (filterIcon) {
+      filterIcon.addEventListener('click', () => {
+        changeIcon();
+      })
+    }
+
+
+    //Event Listener for clicking on favorite icon
+    const listWrapper = document.querySelector('.list-wrapper');
+    if (listWrapper) {
+      listWrapper.addEventListener('submit', e => {
+        favSave(e);
+      })
+    }
+    
 
   }
 
-  return { eventsInit, eventHider, filter };
+  return { eventsInit, eventHider, arrowFavDisplay, filter };
 
 })();
 
@@ -408,93 +464,102 @@ const eventsLogic = (() => {
 //Recent Events Slider Module
 const sliderLogic = (() => {
   //Function to shift right
-  const shiftRight = () => {
-    const recentSlider = document.querySelector('.recent-slider');
+  const shiftRight = (sliderType) => {
     //Number of events
-    let eventLength = recentSlider.children.length;
+    let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
-    let frameRect = recentSlider.parentNode.getBoundingClientRect();
+    let frameRect = sliderType.parentNode.getBoundingClientRect();
     //first event
-    let eventFirst = recentSlider.children[0].getBoundingClientRect();
+    let eventFirst = sliderType.children[0].getBoundingClientRect();
     //last event
-    let eventLast = recentSlider.children[eventLength-1].getBoundingClientRect();
+    let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
 
     //Only shift if last event still overflowing to the right
-    if (window.getComputedStyle(recentSlider).getPropertyValue('transform') === 'none') {
-      recentSlider.style.transform = `translateX(0)`;
+    if (window.getComputedStyle(sliderType).getPropertyValue('transform') === 'none') {
+      sliderType.style.transform = `translateX(0)`;
+    }
+
+    //Decide width increment
+    let stepWidth;
+    if (sliderType === document.querySelector('.recent-slider')) {
+      stepWidth = 240;
+    } else {
+      stepWidth = 110;
     }
 
     if (frameRect.right < eventLast.right) {
       //Get current translateX
-      let widthCurrent = window.getComputedStyle(recentSlider).getPropertyValue('transform').split(',')[4];
+      let widthCurrent = window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4];
       //Advance right for 1 event
-      let width = Number(widthCurrent) - 240;
+      let width = Number(widthCurrent) - stepWidth;
       //Do the translateX
-      recentSlider.style.transform = `translateX(${width}px)`;
-      recentSlider.style.transition = '0.3s';
+      sliderType.style.transform = `translateX(${width}px)`;
+      sliderType.style.transition = '0.3s';
     }
   }
   //Function to shift left
-  const shiftLeft = () => {
-    const recentSlider = document.querySelector('.recent-slider');
+  const shiftLeft = (sliderType) => {
     //Number of events
-    let eventLength = recentSlider.children.length;
+    let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
-    let frameRect = recentSlider.parentNode.getBoundingClientRect();
+    let frameRect = sliderType.parentNode.getBoundingClientRect();
     //first event
-    let eventFirst = recentSlider.children[0].getBoundingClientRect();
+    let eventFirst = sliderType.children[0].getBoundingClientRect();
     //last event
-    let eventLast = recentSlider.children[eventLength-1].getBoundingClientRect();
+    let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
 
     //Only shift if first event still overflowing to the left
-    if (window.getComputedStyle(recentSlider).getPropertyValue('transform') === 'none') {
-      recentSlider.style.transform = `translateX(0)`;
+    if (window.getComputedStyle(sliderType).getPropertyValue('transform') === 'none') {
+      sliderType.style.transform = `translateX(0)`;
+    }
+
+    //Decide width increment
+    let stepWidth;
+    if (sliderType === document.querySelector('.recent-slider')) {
+      stepWidth = 240;
+    } else {
+      stepWidth = 110;
     }
 
     if (eventFirst.left < frameRect.left) {
       //Get current translateX
-      let widthCurrent = window.getComputedStyle(recentSlider).getPropertyValue('transform').split(',')[4];
+      let widthCurrent = window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4];
       //Advance left for 1 event
-      let width = Number(widthCurrent) + 240;
+      let width = Number(widthCurrent) + stepWidth;
       //If first event, align to left side
       if (width > 0) {
         width = 0;
       }
       //Do the translateX
-      recentSlider.style.transform = `translateX(${width}px)`;
-      recentSlider.style.transition = '0.3s';
+      sliderType.style.transform = `translateX(${width}px)`;
+      sliderType.style.transition = '0.3s';
     }
   }
   //Function to display arrows
-  const arrowDisplay = () => {
-    const recentSlider = document.querySelector('.recent-slider');
+  const arrowDisplay = (sliderType, slideLeft, slideRight) => {
     //Number of events
-    let eventLength = recentSlider.children.length;
+    let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
-    let frameRect = recentSlider.parentNode.getBoundingClientRect();
+    let frameRect = sliderType.parentNode.getBoundingClientRect();
     //first event
-    let eventFirst = recentSlider.children[0].getBoundingClientRect();
+    let eventFirst = sliderType.children[0].getBoundingClientRect();
     //last event
-    let eventLast = recentSlider.children[eventLength-1].getBoundingClientRect();
+    let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
 
     //Show left arrow if first event overflowing
     if (eventFirst.left < frameRect.left) {
-      const slideLeft = document.querySelector('.slide-left');
       slideLeft.classList.remove('hide');
     }
     //Show right arrow if last event overflowing
     if (eventLast.right > frameRect.right) {
-      const slideRight = document.querySelector('.slide-right');
       slideRight.classList.remove('hide');
     }
     //Hide right arrow if last event right edge visible
     if (eventLast.right <= frameRect.right) {
-      const slideRight = document.querySelector('.slide-right');
       slideRight.classList.add('hide');
     }
     //Hide left arrow if first event left edge visible
     if (eventFirst.left >= frameRect.left) {
-      const slideLeft = document.querySelector('.slide-left');
       slideLeft.classList.add('hide');
     }
   }
@@ -503,70 +568,96 @@ const sliderLogic = (() => {
     target = e.target;
     //Get id of event
     let eventID;
-    if (target.classList.contains('event-slide')) {
+    if (target.classList.contains('event-slide')
+      ||target.classList.contains('fav-slide')) {
       eventID = target.dataset.id;
-    } else if (target.parentNode.classList.contains('event-slide')) {
+    } else if (target.parentNode.classList.contains('event-slide')
+    ||target.parentNode.classList.contains('fav-slide')) {
       eventID = target.parentNode.dataset.id;
+    } else {
+      return;
     }
     //Jump to event
     let event = document.getElementById(`${eventID}`);
     event.scrollIntoView({block: 'center'});
     //Expand event by simulating click
     eventsLogic.eventHider();
-    event.children[4].classList.remove('hide');
+    event.children[5].classList.remove('hide');
+    eventsLogic.arrowFavDisplay(event.children[5]);
   }
 
   //Initialize slider width
-  const sliderWidthInit = () => {
-    const recentSlider = document.querySelector('.recent-slider');
-    let eventLength = recentSlider.children.length;
+  const sliderWidthInit = (sliderType) => {
+    let eventLength = sliderType.children.length;
+
     let sliderWidth = 240*eventLength;
-    recentSlider.style.width = `${sliderWidth}px`;
+    if (sliderType === document.querySelector('.recent-slider')) {
+      sliderWidth = 240*eventLength;
+    } else {
+      sliderWidth = 110*eventLength;
+    }
+    
+    sliderType.style.width = `${sliderWidth}px`;
   }
 
   //Initialize slider arrows
-  const sliderArrowsInit = () => {
-    const recentSlider = document.querySelector('.recent-slider');
+  const sliderArrowsInit = (sliderType) => {
     //Number of events
-    eventLength = recentSlider.children.length;
+    eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
-    frameRect = recentSlider.parentNode.getBoundingClientRect();
+    frameRect = sliderType.parentNode.getBoundingClientRect();
     //last event right edge
-    eventLast = recentSlider.children[eventLength-1].getBoundingClientRect();
+    eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
+
+    //Decide which slider
+    let slideRight;
+    if (sliderType === document.querySelector('.recent-slider')) {
+      slideRight = document.querySelector('.slide-right');
+    } else {
+      slideRight = document.querySelector('.fav-slide-right');
+    }
 
     if (eventLast.right <= frameRect.right) {
-      const slideRight = document.querySelector('.slide-right');
       slideRight.classList.add('hide');
     }
   }
 
   //Initialize slider and event listeners
-  const sliderInit = () => {
-    const recentSlider = document.querySelector('.recent-slider');
-    if (!recentSlider) {
+  const sliderInit = (sliderType) => {
+    if (!sliderType) {
       return;
     }
-    //Initialize slider width
-    sliderWidthInit();
-    //Initialize slider arrows
-    sliderArrowsInit();
 
+    //Initialize slider width
+    sliderWidthInit(sliderType);
+    //Initialize slider arrows
+    sliderArrowsInit(sliderType);
+
+    //Decide which slider
+    let slideRight;
+    let slideLeft;
+    if (sliderType === document.querySelector('.recent-slider')) {
+      slideRight = document.querySelector('.slide-right');
+      slideLeft = document.querySelector('.slide-left');
+    } else {
+      slideRight = document.querySelector('.fav-slide-right');
+      slideLeft = document.querySelector('.fav-slide-left');
+    }
+    
     //Event Listener for slide right arrow
-    const slideRight = document.querySelector('.slide-right');
     slideRight.addEventListener('click', () => {
-      shiftRight();
+      shiftRight(sliderType);
     })
     //Event Listener for slide left arrow
-    const slideLeft = document.querySelector('.slide-left');
     slideLeft.addEventListener('click', () => {
-      shiftLeft();
+      shiftLeft(sliderType);
     })
     //Event Listener when slide transition ends
-    recentSlider.addEventListener('transitionend', () => {
-      arrowDisplay();
+    sliderType.addEventListener('transitionend', () => {
+      arrowDisplay(sliderType, slideLeft, slideRight);
     })
     //Event Listener for slide linking
-    recentSlider.addEventListener('click', e => {
+    sliderType.addEventListener('click', e => {
       eventJump(e);
     })
   }
@@ -587,8 +678,14 @@ document.addEventListener('turbolinks:load', function() {
     }
   })
 
-  //Initialize slider
-  sliderLogic.sliderInit();
+  //Initialize Recent Slider
+  const recentSlider = document.querySelector('.recent-slider');
+  sliderLogic.sliderInit(recentSlider);
+
+  //Initialize Fav Slider
+  const favSlider = document.querySelector('.fav-slider');
+  sliderLogic.sliderInit(favSlider);
+
   //Initialize event listeners
   eventsLogic.eventsInit();
 })

@@ -36,7 +36,9 @@ parsedEvents['data'].length.times do |i|
                         location: parsedEvents['data'][i]['venue']['location'],
                         state: parsedEvents['data'][i]['venue']['state'],
                         ages: parsedEvents['data'][i]['ages'],
-                        added: parsedEvents['data'][i]['createdDate'][0..9])
+                        added: parsedEvents['data'][i]['createdDate'][0..9],
+                        ticketLink: parsedEvents['data'][i]['ticketLink'],
+                        address: parsedEvents['data'][i]['venue']['address'])
                 
   #Create relationships             
   parsedEvents['data'][i]['artistList'].each do |artist|

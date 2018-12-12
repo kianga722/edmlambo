@@ -20,6 +20,16 @@
  General Styling
  */
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
 body {
   background-color: black;
 }
@@ -162,7 +172,8 @@ Change Locations Styling
   background-color: black;
 }
 
-#location-popup-wrapper {
+#location-popup-wrapper,
+#share-popup-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
@@ -170,9 +181,10 @@ Change Locations Styling
   font-size: .8rem;
 }
 
-#location-popup {
+#location-popup,
+#share-popup {
   position: absolute;
-  width: 75%;
+  width: 83%;
   padding: 10px 25px 15px;
   margin-top: -10%;
 
@@ -182,7 +194,8 @@ Change Locations Styling
   z-index: 999;
 }
 
-.popup-close {
+#popup-close-loc,
+#popup-close-share {
   position: absolute;
   top: -7px;
   right: -7px;
@@ -202,7 +215,8 @@ Change Locations Styling
   background-size: auto 13px;
 }
 
-.popup-close:hover {
+#popup-close-loc:hover,
+#popup-close-share:hover {
   cursor: pointer;
 }
 
@@ -697,7 +711,7 @@ Event List Styling
   text-align: center;
 }
 
-.event-links span {
+.event-links a {
   display: inline-block;
   width: 44%;  
   padding: 7px;
@@ -710,8 +724,8 @@ Event List Styling
   margin-bottom: 10px;
 }
 
-.soundcloud-links span,
-.hotel-links span {
+.soundcloud-links a,
+.hotel-links a {
   display: inline-block;
   width: 25%;  
   padding: 2px;
@@ -736,6 +750,78 @@ Event List Styling
   border-left: 1px solid black;
 }
 
+
+/*
+Share Popup Styling
+*/
+
+#share-popup {
+  margin-top: 0;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+#share-popup a {
+  display: block;
+  padding: 4px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+
+  border-radius: 7px;
+  background-color: rgb(243, 243, 243);
+}
+
+#share-popup a:hover {
+  cursor: pointer;
+}
+
+.share-fb span,
+.share-google span,
+.share-email span,
+.share-twitter span {
+  display: inline-block;
+}
+
+.fb-icon,
+.google-icon,
+.email-icon,
+.twitter-icon {
+  width: 26px;
+  height: 26px;
+  margin-right: 8px;
+  vertical-align: -7px;
+}
+
+.fb-icon {
+  background: url(<%= asset_path 'fb.png' %>) no-repeat center center;
+  background-size: auto 26px;
+}
+
+.google-icon {
+  background: url(<%= asset_path 'google.png' %>) no-repeat center center;
+  background-size: auto 26px;
+}
+
+.email-icon {
+  background: url(<%= asset_path 'email.png' %>) no-repeat center center;
+  background-size: auto 26px;
+}
+
+.twitter-icon {
+  background: url(<%= asset_path 'twitter.png' %>) no-repeat center center;
+  background-size: auto 26px;
+}
+
+
+.fb-label,
+.google-label,
+.email-label,
+.twitter-label {
+  width: 69px;
+
+  text-align: left;
+  font-size: 1rem;
+}
 
 
 

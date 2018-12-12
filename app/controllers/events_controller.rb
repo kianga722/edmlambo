@@ -16,6 +16,7 @@ class EventsController < ApplicationController
       cookies.permanent.encrypted[:locationsToggle] = JSON.dump(@locationsToggle)
     end
 
+    #Repeating Preparation Steps
     #Prepare favorite cookies for slider
     if (cookies.encrypted[:favsArr])
       favsArr = JSON.load(cookies.encrypted[:favsArr])
@@ -66,6 +67,7 @@ class EventsController < ApplicationController
     #Get previous filter terms
     @filter = params[:filterTerm];
 
+    #Repeating Preparation Steps
     #Prepare favorite cookies for slider
     if (cookies.encrypted[:favsArr])
       favsArr = JSON.load(cookies.encrypted[:favsArr])
@@ -75,7 +77,6 @@ class EventsController < ApplicationController
     end
     #Get event arr from list of event IDs
     @eventFavs = get_favs(favsArr)
-
 
     #Prepare variables to check
     @eventsNoFavs = get_events(@locationsToggle)
@@ -90,8 +91,6 @@ class EventsController < ApplicationController
 
     #Prepare new tags
     @eventNew = get_events(@locationsToggle, false, true, favsArr)
-
-    
 
     #Render
     respond_to do |format|
@@ -125,6 +124,7 @@ class EventsController < ApplicationController
     #Get previous filter terms
     @filter = params[:filterTerm];
 
+    #Repeating Preparation Steps
     #Prepare favorite cookies for slider
     if (cookies.encrypted[:favsArr])
       favsArr = JSON.load(cookies.encrypted[:favsArr])
@@ -134,7 +134,6 @@ class EventsController < ApplicationController
     end
     #Get event arr from list of event IDs
     @eventFavs = get_favs(favsArr)
-
 
     #Prepare variables to check
     @eventsNoFavs = get_events(@locationsToggle)
@@ -149,7 +148,6 @@ class EventsController < ApplicationController
 
     #Prepare new tags
     @eventNew = get_events(@locationsToggle, false, true, favsArr)
-
 
     #Render
     respond_to do |format|
@@ -173,7 +171,6 @@ class EventsController < ApplicationController
 
     #Set fav cookies
     cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
-
 
     respond_to do |format|
       format.js

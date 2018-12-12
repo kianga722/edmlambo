@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 2018_12_01_204804) do
     t.string "state"
     t.string "ages"
     t.string "added"
+    t.string "ticketLink"
+    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

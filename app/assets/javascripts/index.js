@@ -1,5 +1,6 @@
 //Event Logic Module
 const eventsLogic = (() => {
+  /*
   //Function to Unhide Change Location popup
   const unHidePopup = e => {
     const popupBG = document.getElementById('popup-bg');
@@ -8,6 +9,34 @@ const eventsLogic = (() => {
     popupLocation.classList.remove('hide');
     e.stopImmediatePropagation();
   }
+  */
+
+  //Function to Unhide Change Location popup
+  const unHidePopup = e => {
+    const popupBG = document.getElementById('popup-bg');
+    popupBG.classList.remove('hide');
+    e.stopImmediatePropagation();
+  }
+
+  //Function to Unhide Change Location popup
+  const unHidePopupLoc = e => {
+    const popupLocation = document.getElementById('location-popup');
+    popupLocation.classList.remove('hide');
+    e.stopImmediatePropagation();
+  }
+
+  //Function to Unhide Change Location popup
+  const unHidePopupShare = e => {
+    let target = e.target;
+
+    const popupShare = document.getElementById('share-popup');
+    popupShare.classList.remove('hide');
+    //Add top offset to popup
+    let topOffset = window.pageYOffset;
+    popupShare.style.top = `${topOffset}px`;
+    e.stopImmediatePropagation();
+  }
+
 
   //Add locations through popup options
 
@@ -135,30 +164,68 @@ const eventsLogic = (() => {
     Rails.fire(locationAdded, 'submit')
   }
 
-  //Function to hide popup
+/*
+  //Function to hide popup bg
   const popupHider = () => {
     const popupBG = document.getElementById('popup-bg');
     const popupLocation = document.getElementById('location-popup');
     popupBG.classList.add('hide');
     popupLocation.classList.add('hide');
   }
+  */
+
+  //Function to hide popup bg
+  const popupHider = () => {
+    const popupBG = document.getElementById('popup-bg');
+    popupBG.classList.add('hide');
+  }
+
+  //Function to hide location popup 
+  const popupHiderLoc = () => {
+    const popupLocation = document.getElementById('location-popup');
+    popupLocation.classList.add('hide');
+  }
+
+  //Function to hide share popup 
+  const popupHiderShare = () => {
+    const popupShare = document.getElementById('share-popup');
+    popupShare.classList.add('hide');
+  }
 
   //Function to hide popup outside popup box
   const popupHiderOutside = e => {
     let target = e.target;
 
+    //Make sure clicking on popup itself does not exit
     const popupBG = document.getElementById('popup-bg');
     if (!popupBG.classList.contains('hide')) {
       if (target.id === 'location-popup'
         ||target.parentNode.id === 'location-popup'
         ||target.parentNode.parentNode.id === 'location-popup'
         ||target.parentNode.parentNode.parentNode.id === 'location-popup'
-        ||target.parentNode.parentNode.parentNode.parentNode.id === 'location-popup')
+        ||target.parentNode.parentNode.parentNode.parentNode.id === 'location-popup'
+        ||target.id === 'share-popup'
+        ||target.parentNode.id === 'share-popup'
+        ||target.parentNode.parentNode.id === 'share-popup'
+        ||target.parentNode.parentNode.parentNode.id === 'share-popup')
       {
         return;
       } else {
-        locationSubmit();
-        popupHider();
+        //Hide correct popup
+        const popupLocation = document.getElementById('location-popup');
+        if (!popupLocation.classList.contains('hide')) {
+          locationSubmit();
+          popupHider();
+          popupHiderLoc();
+          return;
+        }
+        const popupShare = document.getElementById('share-popup');
+        if (!popupShare.classList.contains('hide')) {
+          popupHider();
+          popupHiderShare();
+          return;
+        }
+
       }
     }
   }
@@ -174,6 +241,13 @@ const eventsLogic = (() => {
         let event = eventList.children[i];
         if (event.classList.contains('event')) {
           event.children[5].classList.add('hide');
+          //Hide favorite icon if not saved
+          if (!event.children[4].children[1].classList.contains('saved')) {
+            let arrowLink = event.children[3];
+            let favorite = event.children[4];
+            arrowLink.classList.remove('hide');
+            favorite.classList.add('hide');
+          }
         }
       }
     }
@@ -354,6 +428,15 @@ const eventsLogic = (() => {
     }
   }
 
+  //Function to share event
+  const shareEvent = (e) => {
+    let target = e.target;
+    
+    if (target.classList.contains('airbnb-share')) {
+      unHidePopup(e);
+      unHidePopupShare(e);
+    }
+  }
 
   //Function to initalize event handlers
   eventsInit = () => {
@@ -361,6 +444,7 @@ const eventsLogic = (() => {
     const locationChange = document.querySelector('.location-change');
     locationChange.addEventListener('click', e => {
       unHidePopup(e);
+      unHidePopupLoc(e);
     })
 
     //Event Listener for dropdown menus
@@ -397,12 +481,20 @@ const eventsLogic = (() => {
     const done = document.querySelector('.done');
     done.addEventListener('click', () => {
       popupHider();
+      popupHiderLoc();
     })
-    //Event Listener for popup X button
-    const popupClose = document.querySelector('.popup-close');
-    popupClose.addEventListener('click', () => {
+    //Event Listener for location popup X button
+    const popupCloseLoc = document.getElementById('popup-close-loc');
+    popupCloseLoc.addEventListener('click', () => {
       locationSubmit();
       popupHider();
+      popupHiderLoc();
+    })
+    //Event Listener for share popup X button
+    const popupCloseShare = document.getElementById('popup-close-share');
+    popupCloseShare.addEventListener('click', () => {
+      popupHider();
+      popupHiderShare();
     })
     //Event Listener for outside popup box
     document.body.addEventListener('click', e => {
@@ -424,7 +516,7 @@ const eventsLogic = (() => {
     }
 
     //Event Listener for sending filter terms on form submission location update
-    const locationAdded= document.querySelector('.location-added');
+    const locationAdded = document.querySelector('.location-added');
     locationAdded.addEventListener('submit', () => {
       filterGet(locationAdded);
     })
@@ -443,15 +535,20 @@ const eventsLogic = (() => {
       })
     }
 
-
-    //Event Listener for clicking on favorite icon
+    //Event Listener for clicking buttons in an event
     const listWrapper = document.querySelector('.list-wrapper');
     if (listWrapper) {
+      //Event Listener for favorite icon clicking
       listWrapper.addEventListener('submit', e => {
         favSave(e);
       })
+      //Event Listener for share button clicking
+      listWrapper.addEventListener('click', e => {
+        shareEvent(e);
+      })
     }
-    
+
+
 
   }
 
@@ -636,22 +733,38 @@ const sliderLogic = (() => {
     //Decide which slider
     let slideRight;
     let slideLeft;
+    let slideFrame;
     if (sliderType === document.querySelector('.recent-slider')) {
       slideRight = document.querySelector('.slide-right');
       slideLeft = document.querySelector('.slide-left');
+      slideFrame = document.querySelector('.recent-slider-frame');
     } else {
       slideRight = document.querySelector('.fav-slide-right');
       slideLeft = document.querySelector('.fav-slide-left');
+      slideFrame = document.querySelector('.fav-slider-frame');
     }
     
-    //Event Listener for slide right arrow
+    //Event Listener for slide right arrow click
     slideRight.addEventListener('click', () => {
       shiftRight(sliderType);
     })
-    //Event Listener for slide left arrow
+    //Event Listener for slide left arrow click
     slideLeft.addEventListener('click', () => {
       shiftLeft(sliderType);
     })
+
+    //Event Listener for scrolling
+    slideFrame.addEventListener('wheel', e => {
+      //Prevent default scrolling of page
+      e.preventDefault();
+      if (e.deltaY > 0) {
+        shiftLeft(sliderType);
+      } else {
+        shiftRight(sliderType);
+      }
+    })
+
+
     //Event Listener when slide transition ends
     sliderType.addEventListener('transitionend', () => {
       arrowDisplay(sliderType, slideLeft, slideRight);
@@ -686,6 +799,6 @@ document.addEventListener('turbolinks:load', function() {
   const favSlider = document.querySelector('.fav-slider');
   sliderLogic.sliderInit(favSlider);
 
-  //Initialize event listeners
+  //Initialize Event listeners
   eventsLogic.eventsInit();
 })

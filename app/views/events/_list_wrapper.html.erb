@@ -75,32 +75,32 @@
             <div class='event-more hide'>
 
               <div class='event-links'>
-                <span class='event-website'>
+                <a href='<%= event.ticketLink %>' target='_blank' rel='noopener noreferrer' class='event-website'>
                   Event Website
-                </span
-                ><span class='event-map'>
+                </a
+                ><a href='https://maps.google.com/?q=<%= event.address %>' target='_blank' rel='noopener noreferrer' class='event-map'>
                   Venue Map
-                </span>
+                </a>
               </div>
 
               <% event.artists.each do |artist| %>
                 <div class='soundcloud-links'>
-                  <span class='soundcloud-artist'>
+                  <a class='soundcloud-artist'>
                     <%= artist.name %>
-                  </span
-                  ><span class='soundcloud-link'>
+                  </a
+                  ><a class='soundcloud-link'>
                     SoundCloud
-                  </span>
+                  </a>
                 </div>
               <% end %>
 
               <div class='hotel-links'>
-                <span class='airbnb-link'>
+                <a class='airbnb-link'>
                   Hotels & Airbnbs
-                </span
-                ><span class='airbnb-share'>
+                </a
+                ><a class='airbnb-share'>
                   Share
-                </span>
+                </a>
               </div>
 
             </div>

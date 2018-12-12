@@ -4,7 +4,8 @@ if (<%= @renderPage %>) {
   page.innerHTML = `
     <%= escape_javascript( render('nav')) %>
     <%= escape_javascript( render('location')) %>
-    <%= escape_javascript( render('event-list')) %>
+    <%= escape_javascript( render('share')) %>
+    <%= escape_javascript( render('event_list')) %>
   `;
 
   //Initialize Recent Slider

@@ -8,6 +8,8 @@ class CreateEvents < ActiveRecord::Migration[5.2]
       t.string :state
       t.string :ages
       t.string :added
+      t.string :ticketLink
+      t.string :address
 
       t.timestamps
     end

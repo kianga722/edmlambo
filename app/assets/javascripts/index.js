@@ -508,12 +508,13 @@ const eventsLogic = (() => {
         searchIcon.classList.remove(xClass);
         searchBox.value = '';
         searchBox.focus();
-        //filter();
         if (iconType === document.querySelector('.tour-search-icon')) {
           const noArtists = document.querySelector('.no-artists');
           const foundArtists = document.querySelector('.found-artists');
           noArtists.classList.add('hide');
           foundArtists.classList.add('hide');
+        } else {
+          filter();
         }
       } else {
         //Focus into searchbox if click on magnifying glass

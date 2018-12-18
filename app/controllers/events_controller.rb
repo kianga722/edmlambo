@@ -227,7 +227,11 @@ class EventsController < ApplicationController
   #Tours
   def tours
     #List of artists to pass to JS
-    gon.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
+    #gon.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
+    #gon.watch.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
+    #Gon.global.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
+
+
 
     @renderTour = false
 
@@ -259,8 +263,6 @@ class EventsController < ApplicationController
 
     #Get event arr from list of event IDs for Cities
     @eventFavs = get_favs(favsArr)
-
-
 
 
     respond_to do |format|

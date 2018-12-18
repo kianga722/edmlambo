@@ -1111,9 +1111,11 @@ const toursLogic = (() => {
         return;
       } else {
         //Create array of artist suggestions max 5
-        artists = gon.artists;
+        //artists = gon.artists;
+        //gon.watch('artists', (artists) => {
+        artists = gon.global.artists;
 
-        suggestions = []
+        let suggestions = []
         for (let i=0; i<artists.length; i+=1) {
           let artist = artists[i][0];
           let id = artists[i][1];
@@ -1158,7 +1160,10 @@ const toursLogic = (() => {
           }
         }
 
+      //})
+
       }
+
     }
   }
 

@@ -465,7 +465,7 @@ class EventsController < ApplicationController
     #Start from 3 days ago since can be in the middle of a festival
     threeDaysAgo = (Time.now - (3*24*60*60)).strftime('%Y-%m-%d')
     #Find relevant events
-    events = Event.where(festival: 1).where('date >= ?', threeDaysAgo)
+    events = Event.where(festival: 1).where('date >= ?', threeDaysAgo).order(:date)
 
     #Make hash of hashes that include all necessary info
     festivalDatesArr = {}

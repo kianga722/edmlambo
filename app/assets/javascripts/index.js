@@ -376,6 +376,18 @@ const eventsLogic = (() => {
       eventHider();
       //Show info on selected
       eventMore.classList.remove('hide');
+
+      //Scroll into view if not in view
+      let eventAll = eventMore.parentNode;
+      let rect = eventAll.getBoundingClientRect();
+      let moreTop = rect.top;
+      let moreBottom = rect.bottom;
+    
+      if (moreTop < 0) {
+        eventAll.scrollIntoView({block: 'start'});
+      } else if (moreBottom > window.innerHeight) {
+        eventAll.scrollIntoView({block: 'end'});
+      }
     }
 
     //Display favorite or arrow icon
@@ -1022,6 +1034,18 @@ const festivalsLogic = (() => {
       festivalHider(tab);
       //Show info on selected
       festMore.classList.remove('hide');
+
+      //Scroll into view if not in view
+      let eventAll = festMore.parentNode;
+      let rect = eventAll.getBoundingClientRect();
+      let moreTop = rect.top;
+      let moreBottom = rect.bottom;
+    
+      if (moreTop < 0) {
+        eventAll.scrollIntoView({block: 'start'});
+      } else if (moreBottom > window.innerHeight) {
+        eventAll.scrollIntoView({block: 'end'});
+      }
     }
 
     //Display favorite or arrow icon

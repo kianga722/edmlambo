@@ -227,7 +227,6 @@ class EventsController < ApplicationController
   #Tours
   def tours
     #List of artists to pass to JS
-    #gon.artists = Artist.all.order(:name).map { |a| a.name }
     gon.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
 
     @renderTour = false

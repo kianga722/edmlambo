@@ -775,6 +775,16 @@ Event List Styling
   text-align: center;
 }
 
+.scIcon {
+  display: inline-block;
+  width: 38px;
+  height: 15px;
+
+  background: url(<%= asset_path 'soundcloud.png' %>) no-repeat 2px center;
+  background-size: auto 15px;
+  vertical-align: -2px;
+}
+
 .event-more .event-website,
 .event-more .soundcloud-artist,
 .event-more .airbnb-link,
@@ -794,6 +804,15 @@ Event List Styling
   border-left: 1px solid black;
 }
 
+.shareIcon {
+  display: inline-block;
+  width: 26px;
+  height: 12px;
+
+  background: url(<%= asset_path 'share.png' %>) no-repeat left center;
+  background-size: auto 12px;
+  vertical-align: -1px;
+}
 
 .event-pic:hover,
 .event-title:hover,
@@ -1012,7 +1031,7 @@ Tours Section Styling
 
 .tours-soundcloud-link {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 4px 16px;
 
   background-color: #333;
   border-radius: 7px;

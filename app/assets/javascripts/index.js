@@ -568,7 +568,8 @@ const eventsLogic = (() => {
   const shareEvent = (e) => {
     let target = e.target;
     
-    if (target.classList.contains('airbnb-share')) {
+    if (target.classList.contains('airbnb-share')
+      ||target.classList.contains('shareIcon')) {
       unHidePopup(e);
       unHidePopupShare(e);
     }
@@ -998,7 +999,8 @@ const festivalsLogic = (() => {
     let festMore;
     //Determine what was clicked
     //Do not hide when clicking favorites
-    if (!target.classList.contains('favorite')) {
+    if (!target.classList.contains('favorite')
+      &&!target.classList.contains('scIcon')) {
       if (target.classList.contains(classCheck)) {
         //if click on festival div
         festMore = target.children[3];

@@ -20,7 +20,11 @@
             </div>
 
             <div class='slide-title'>
-              <%= fav.title[0,20] + '...' %>
+              <% if fav.title.length > 20 %>
+                <%= fav.title[0, 20] + '...' %>          
+              <% else %>
+                <%= fav.title %>
+              <% end %>
             </div>
 
             <div class='slide-sep'></div>

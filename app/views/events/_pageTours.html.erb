@@ -1,0 +1,192 @@
+<!-- Artist Search -->
+
+<div class='tour-search-wrapper'>
+  <div class='tour-search-icon-bg'></div>
+  <div class='tour-search-icon '></div>
+
+  <input class='tour-search-box' type='text' placeholder='Enter artist to see tour dates'>
+</div>
+
+<div class='search-suggestions'>
+  <div class='no-artists hide'>
+    No artists found.
+  </div>
+  <div class='found-artists hide'>
+  </div>
+</div>
+
+
+<!-- Artist Info -->
+
+<div class='tours-artist-wrapper'>
+  <div class='tours-pic'></div>
+  <div class='tours-artist'>
+    <%= @artist.name %> Tour
+  </div>
+  <a class='tours-soundcloud-link'>
+    SoundCloud
+  </a>
+</div>
+
+
+<!-- Events List -->
+
+<div class='tours-list-wrapper'>
+
+  <% if @events.length > 0 %>
+
+    <% @months.each do |month| %>
+      <div class='month'>
+        <%= month %>
+      </div>
+
+      <% @events.each do |event| %>
+        <% if DateTime.parse(event.date).strftime('%B') == month %>
+
+          <div class='event'>
+
+            <div class='dates-info-wrapper-tour'>
+    <!-- Date Icon -->
+
+              <div class='dates-wrapper-tour'>
+                
+                <div class='tours-pic-wrapper'>
+                  <div class='festival-pic'>
+                  </div>
+                </div>
+
+                <div class='tours-dates'>
+                  <div>
+                    <%= DateTime.parse(event.date).strftime('%a') %>
+                  </div>
+                  <div>
+                    <%= DateTime.parse(event.date).strftime('%b %d') %>
+                  </div>
+                </div>
+
+              </div>
+    
+    <!-- Regular Details -->
+              <div class='tours-info'>
+                <div class='tours-title'>
+                  <%= event.title %>
+                </div>
+
+                <div class='tours-details'>
+                  <span>
+                    <%= event.venue %>
+                  </span>
+                  <span>
+                    &nbsp;-&nbsp;
+                  </span>
+                  <span>
+                    <%= event.location %>
+                  </span>
+                  <% if event.ages %>
+                    <span class='event-ages'>
+                      <%= event.ages %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+
+            </div>
+
+    <!-- Favorite button -->
+
+            <% if @eventFavs.include? event %>
+
+              <% if @eventNew.include? event %>
+                <div class='arrow-link new hide'>
+                  new
+                </div>
+              <% else %>
+                <div class='arrow-link arrow hide'>
+                </div>
+              <% end %>
+
+              <form class='favorite-wrapper' action='/events' method='new' data-remote='true'>
+                <input type='hidden' name='eventID' value='<%= event.id %>'>
+                <input type='submit' class='favorite saved' value=''>
+              </form>
+
+            <% else %>
+
+              <% if @eventNew.include? event %>
+                <div class='arrow-link new'>
+                  new
+                </div>
+              <% else %>
+                <div class='arrow-link arrow'>
+                </div>
+              <% end %>
+
+              <form class='favorite-wrapper hide' action='/events' method='new' data-remote='true'>
+                <input type='hidden' name='eventID' value='<%= event.id %>'>
+                <input type='submit' class='favorite' value=''>
+              </form>
+
+            <% end %>
+
+
+
+    <!-- Event More Details -->  
+
+            <div class='event-more hide'>
+
+              <div class='event-links'>
+                <a href='<%= event.ticketLink %>' target='_blank' rel='noopener noreferrer' class='event-website'>
+                  Event Website
+                </a
+                ><a href='https://maps.google.com/?q=<%= event.address %>' target='_blank' rel='noopener noreferrer' class='event-map'>
+                  Venue Map
+                </a>
+              </div>
+
+              <% event.artists.each do |artist| %>
+                <div class='soundcloud-links'>
+                  <% if @artist.id === artist.id %>
+                    <a class='soundcloud-artist same-artist'>
+                      <%= artist.name %>
+                  <% else %>
+                    <a href='/tours?artist=<%= artist.id %>' class='soundcloud-artist' data-remote=true> 
+                      <%= artist.name %> 
+                  <% end %>
+                    </a
+                    ><a class='soundcloud-link'>
+                      SoundCloud
+                    </a>
+                </div>
+              <% end %>
+
+              <div class='hotel-links'>
+                <a class='airbnb-link'>
+                  Hotels & Airbnbs
+                </a
+                ><a class='airbnb-share'>
+                  Share
+                </a>
+              </div>
+
+            </div>
+
+
+
+
+          </div>
+
+        <% end %>
+
+      <% end %>
+
+    <% end %>
+
+  <% else %>
+
+    <div class='no-match'>
+      No events found for this artist.
+    </div>
+
+  <% end %>
+
+</div>

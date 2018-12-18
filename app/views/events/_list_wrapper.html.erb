@@ -29,9 +29,11 @@
               <span>
                 <%= event.location %>
               </span>
-              <span>
-                <%= event.ages %>
-              </span>
+              <% if event.ages %>
+                <span class='event-ages'>
+                  <%= event.ages %>
+                </span>
+              <% end %>
             </div>
 
   <!-- Favorite button -->
@@ -85,7 +87,7 @@
 
               <% event.artists.each do |artist| %>
                 <div class='soundcloud-links'>
-                  <a class='soundcloud-artist'>
+                  <a href='/tours?artist=<%= artist.id %>' class='soundcloud-artist' data-remote=true>
                     <%= artist.name %>
                   </a
                   ><a class='soundcloud-link'>

@@ -1,15 +1,77 @@
+//Navbar Logic Module
+const navLogic = (() => {
+  //Function to highlight current tab
+  const tabHighlight = (tab) => {
+    //Highlight only correct tab
+    const tabs = document.querySelector('.tabs');
+    for (let i=0; i<tabs.children.length-1; i+=1) {
+      if (tabs.children[i] != tab) {
+        tabs.children[i].children[0].classList.remove('tab-select');
+      } else {
+        tabs.children[i].children[0].classList.add('tab-select');
+      }
+    }
+  }
+  //Function to highlight current tab on load
+  const tabHighlightOnLoad = (tab) => {
+    let path = window.location.pathname;
+    let tabCurrent;
+    if (path === '/') {
+      tabCurrent = document.querySelector('.tab-cities');
+    } else if (path === '/festivals') {
+      tabCurrent = document.querySelector('.tab-festivals');
+    } else if (path === '/tours') {
+      tabCurrent = document.querySelector('.tab-tours');
+    }
+    tabHighlight(tabCurrent);
+  }
+  //Function to display correct URL
+  const tabURL = (tab) => {
+    //Modify url when visiting tabs
+    if (tab.classList.contains('tab-cities')) {
+      history.pushState(null, '', '/');
+      return;
+    }
+    if (tab.classList.contains('tab-festivals')) {
+      history.pushState(null, '', '/festivals');
+      return;
+    }
+    if (tab.classList.contains('tab-tours')) {
+      history.pushState(null, '', '/tours');
+      return;
+    }
+  }
+
+
+  //Function to initializeEvent Listeners for Nav section
+  const navInit = () => {
+    //Event Listener for Cities option
+    const navCities = document.querySelector('.tab-cities');
+    navCities.addEventListener('click', () => {
+      tabHighlight(navCities);
+      tabURL(navCities);
+    })
+    //Event Listener for Festivals option
+    const navFestivals = document.querySelector('.tab-festivals');
+    navFestivals.addEventListener('click', () => {
+      tabHighlight(navFestivals);
+      tabURL(navFestivals);
+    })
+    //Event Listener for Tours option
+    const navTours = document.querySelector('.tab-tours');
+    navTours.addEventListener('click', () => {
+      tabHighlight(navTours);
+      tabURL(navTours);
+    })
+  }
+
+  return { navInit, tabHighlight, tabURL, tabHighlightOnLoad }
+
+})();
+
+
 //Event Logic Module
 const eventsLogic = (() => {
-  /*
-  //Function to Unhide Change Location popup
-  const unHidePopup = e => {
-    const popupBG = document.getElementById('popup-bg');
-    const popupLocation = document.getElementById('location-popup');
-    popupBG.classList.remove('hide');
-    popupLocation.classList.remove('hide');
-    e.stopImmediatePropagation();
-  }
-  */
 
   //Function to Unhide Change Location popup
   const unHidePopup = e => {
@@ -164,15 +226,6 @@ const eventsLogic = (() => {
     Rails.fire(locationAdded, 'submit')
   }
 
-/*
-  //Function to hide popup bg
-  const popupHider = () => {
-    const popupBG = document.getElementById('popup-bg');
-    const popupLocation = document.getElementById('location-popup');
-    popupBG.classList.add('hide');
-    popupLocation.classList.add('hide');
-  }
-  */
 
   //Function to hide popup bg
   const popupHider = () => {
@@ -198,36 +251,41 @@ const eventsLogic = (() => {
 
     //Make sure clicking on popup itself does not exit
     const popupBG = document.getElementById('popup-bg');
-    if (!popupBG.classList.contains('hide')) {
-      if (target.id === 'location-popup'
-        ||target.parentNode.id === 'location-popup'
-        ||target.parentNode.parentNode.id === 'location-popup'
-        ||target.parentNode.parentNode.parentNode.id === 'location-popup'
-        ||target.parentNode.parentNode.parentNode.parentNode.id === 'location-popup'
-        ||target.id === 'share-popup'
-        ||target.parentNode.id === 'share-popup'
-        ||target.parentNode.parentNode.id === 'share-popup'
-        ||target.parentNode.parentNode.parentNode.id === 'share-popup')
-      {
-        return;
-      } else {
-        //Hide correct popup
-        const popupLocation = document.getElementById('location-popup');
-        if (!popupLocation.classList.contains('hide')) {
-          locationSubmit();
-          popupHider();
-          popupHiderLoc();
+    if (popupBG) {
+      if (!popupBG.classList.contains('hide')) {
+        if (target.id === 'location-popup'
+          ||target.parentNode.id === 'location-popup'
+          ||target.parentNode.parentNode.id === 'location-popup'
+          ||target.parentNode.parentNode.parentNode.id === 'location-popup'
+          ||target.parentNode.parentNode.parentNode.parentNode.id === 'location-popup'
+          ||target.id === 'share-popup'
+          ||target.parentNode.id === 'share-popup'
+          ||target.parentNode.parentNode.id === 'share-popup'
+          ||target.parentNode.parentNode.parentNode.id === 'share-popup')
+        {
           return;
-        }
-        const popupShare = document.getElementById('share-popup');
-        if (!popupShare.classList.contains('hide')) {
-          popupHider();
-          popupHiderShare();
-          return;
-        }
+        } else {
+          //Hide correct popup
+          const popupLocation = document.getElementById('location-popup');
+          if (popupLocation) {
+            if (!popupLocation.classList.contains('hide')) {
+              locationSubmit();
+              popupHider();
+              popupHiderLoc();
+              return;
+            }
+          }
+          const popupShare = document.getElementById('share-popup');
+          if (!popupShare.classList.contains('hide')) {
+            popupHider();
+            popupHiderShare();
+            return;
+          }
 
+        }
       }
     }
+    
   }
 
 
@@ -255,12 +313,25 @@ const eventsLogic = (() => {
 
   //Function to decide favorite icon or arrow display 
   const arrowFavDisplay = (eventMore) => {
-    let event = eventMore.parentNode;
-    let arrowLink = event.children[3];
-    let favorite = event.children[4];
+    let event = eventMore.parentNode;;
+    let arrowLink;
+    let favorite;
+    let favSaved;
+
+    if (window.location.pathname === '/') {
+      arrowLink = event.children[3];
+      favorite = event.children[4];
+      favSaved = eventMore.parentNode.children[4].children[1];
+    } else {
+      arrowLink = event.children[1];
+      favorite = event.children[2];
+      favSaved = eventMore.parentNode.children[2].children[1];
+    }
+
     //Check if specific eventMore is hidden and if it is a favorite
+
     if (!eventMore.classList.contains('hide') 
-      || eventMore.parentNode.children[4].children[1].classList.contains('saved') ) {
+      ||favSaved.classList.contains('saved') ) {
       arrowLink.classList.add('hide');
       favorite.classList.remove('hide');
     } else {
@@ -271,21 +342,28 @@ const eventsLogic = (() => {
 
   //Function that expands event info
   const eventExpand = e => {
-    target = e.target;
+    let target = e.target;
     let eventMore;
     //Determine what was clicked
-    //Do not hide when clicking in expanded space
-    if (target.parentNode.classList.contains('event') 
-    && !target.classList.contains('event-more')
-    && !target.classList.contains('favorite')) {
-      //if click on event title
-      eventMore = target.parentNode.children[5];
-    } else if (target.parentNode.parentNode.classList.contains('event') 
-    && !target.parentNode.classList.contains('event-more')
-    && !target.classList.contains('favorite')) {
-      //if click on event location
-      eventMore = target.parentNode.parentNode.children[5];
+    //Do not hide when clicking favorites
+    if (!target.classList.contains('favorite')) {
+      if (target.classList.contains('event')) {
+        //if click on event div
+        eventMore = target.children[5];
+      } else if (target.parentNode.classList.contains('event') 
+      && !target.classList.contains('event-more')) {
+        //if click on event title
+        eventMore = target.parentNode.children[5];
+      } else if  (target.parentNode.parentNode.classList.contains('event') 
+      && !target.parentNode.classList.contains('event-more')) {
+        //if click on event location
+        eventMore = target.parentNode.parentNode.children[5];
+      } else {
+        //Ignore all other clicks
+        return;
+      }
     } else {
+      //Ignore all other clicks
       return;
     }
 
@@ -399,7 +477,39 @@ const eventsLogic = (() => {
   }
 
   //Function to determine effects of clicking the filter icon
-  const changeIcon = () => { 
+  const changeIcon = (iconType) => { 
+    //Decide which searchbox is being used
+    let searchIcon;
+    let searchBox;
+    if (iconType === document.querySelector('.filter-icon')) {
+      searchIcon = document.querySelector('.filter-icon');
+      searchBox = document.querySelector('.filter-box');
+      xClass = 'filter-x';
+    } else {
+      searchIcon = document.querySelector('.tour-search-icon');
+      searchBox = document.querySelector('.tour-search-box');
+      xClass = 'tour-x';
+    }
+    if (searchBox) {
+      //Remove string if click on X
+      if (searchIcon.classList.contains(xClass)) {
+        searchIcon.classList.remove(xClass);
+        searchBox.value = '';
+        searchBox.focus();
+        //filter();
+        if (iconType === document.querySelector('.tour-search-icon')) {
+          const noArtists = document.querySelector('.no-artists');
+          const foundArtists = document.querySelector('.found-artists');
+          noArtists.classList.add('hide');
+          foundArtists.classList.add('hide');
+        }
+      } else {
+        //Focus into searchbox if click on magnifying glass
+        searchBox.focus();
+      }
+    }
+
+/*
     const filterBox = document.querySelector('.filter-box');
     const filterIcon = document.querySelector('.filter-icon');
     if (filterBox) {
@@ -412,6 +522,7 @@ const eventsLogic = (() => {
         filterBox.focus();
       }
     }
+    */
   }
 
   //Function to light up fav icon
@@ -428,6 +539,19 @@ const eventsLogic = (() => {
     }
   }
 
+  //Function to send current URL path in favorite submission
+  const pathGet = (e) => {
+    let target = e.target;
+
+    if (target) {
+      pathEle = document.createElement('input');
+      pathEle.type = 'hidden';
+      pathEle.name = 'path';
+      pathEle.value = window.location.pathname;
+      target.appendChild(pathEle);
+    }
+  }
+
   //Function to share event
   const shareEvent = (e) => {
     let target = e.target;
@@ -439,74 +563,90 @@ const eventsLogic = (() => {
   }
 
   //Function to initalize event handlers
-  eventsInit = () => {
+  const eventsInit = () => {
     //Event Listener to Unhide Change Location popup
     const locationChange = document.querySelector('.location-change');
-    locationChange.addEventListener('click', e => {
-      unHidePopup(e);
-      unHidePopupLoc(e);
-    })
-
+    if (locationChange) {
+      locationChange.addEventListener('click', e => {
+        unHidePopup(e);
+        unHidePopupLoc(e);
+      })
+    }
+   
     //Event Listener for dropdown menus
     const locationPreselect = document.querySelector('.location-preselect');
-    locationPreselect.addEventListener('click', e => {
-      addLocation(e);
-    })
+    if (locationPreselect) {
+      locationPreselect.addEventListener('click', e => {
+        addLocation(e);
+      })
+    }
+   
 
     //Event Listener for search submit
     const searchSubmit = document.querySelector('.search-submit');
-    searchSubmit.addEventListener('click', e => {
-      searchLocations();
-    })
+    if (searchSubmit) {
+      searchSubmit.addEventListener('click', e => {
+        searchLocations();
+      })
+    }
+    
     //Event Listener for Enter key in searchbox
     const searchBox = document.querySelector('.search-box');
-    searchBox.addEventListener('keypress', e => {
-      let key = e.keyCode;
-      if (key === 13) {
-        searchLocations();
-      }
-    })
+    if (searchBox) {
+      searchBox.addEventListener('keypress', e => {
+        let key = e.keyCode;
+        if (key === 13) {
+          searchLocations();
+        }
+      })
+    }
+    
 
     //Event Listener for checkbox logic
     const locationRemove = document.querySelector('.location-added');
-    locationRemove.addEventListener('click', e => {
-      checkboxRemove(e);
-    })
-    //Event Listener to prevent Refresh after submit
-    locationRemove.addEventListener('submit', e => {
-      e.preventDefault();
-    })
+    if (locationRemove) {
+      locationRemove.addEventListener('click', e => {
+        checkboxRemove(e);
+      })
+      //Event Listener to prevent Refresh after submit
+      locationRemove.addEventListener('submit', e => {
+        e.preventDefault();
+      })
+    }
+    
 
     //Event Listener for Done button
     const done = document.querySelector('.done');
-    done.addEventListener('click', () => {
-      popupHider();
-      popupHiderLoc();
-    })
+    if (done) {
+      done.addEventListener('click', () => {
+        popupHider();
+        popupHiderLoc();
+      })
+    }
+  
     //Event Listener for location popup X button
     const popupCloseLoc = document.getElementById('popup-close-loc');
-    popupCloseLoc.addEventListener('click', () => {
-      locationSubmit();
-      popupHider();
-      popupHiderLoc();
-    })
+    if (popupCloseLoc) {
+      popupCloseLoc.addEventListener('click', () => {
+        locationSubmit();
+        popupHider();
+        popupHiderLoc();
+      })
+    }
+    
     //Event Listener for share popup X button
     const popupCloseShare = document.getElementById('popup-close-share');
-    popupCloseShare.addEventListener('click', () => {
-      popupHider();
-      popupHiderShare();
-    })
-    //Event Listener for outside popup box
-    document.body.addEventListener('click', e => {
-      popupHiderOutside(e);
-    })
-
-    //Event Listeners to each event to expand info
-    const eventList = document.querySelector('.event-list');
-    eventList.addEventListener('click', e => {
-      eventExpand(e);
-    })
-
+    if (popupCloseShare) {
+      popupCloseShare.addEventListener('click', () => {
+        popupHider();
+        popupHiderShare();
+      })
+      //Event Listener for outside popup box
+      document.body.addEventListener('click', e => {
+        popupHiderOutside(e);
+      })
+    }
+    
     //Event Listener for filtering after every input
     const filterBox = document.querySelector('.filter-box');
     if (filterBox) {
@@ -517,21 +657,25 @@ const eventsLogic = (() => {
 
     //Event Listener for sending filter terms on form submission location update
     const locationAdded = document.querySelector('.location-added');
-    locationAdded.addEventListener('submit', () => {
-      filterGet(locationAdded);
-    })
-
+    if (locationAdded) {
+      locationAdded.addEventListener('submit', () => {
+        filterGet(locationAdded);
+      })
+    }
+    
     //Event Listener for sending filter terms on form submission toggle
     const locationCurrent = document.querySelector('.location-current');
-    locationCurrent.addEventListener('submit', () => {
-      filterGet(locationCurrent);
-    })
-
+    if (locationCurrent) {
+      locationCurrent.addEventListener('submit', () => {
+        filterGet(locationCurrent);
+      })
+    }
+    
     //Event Listener for clicking on filter icon
     const filterIcon = document.querySelector('.filter-icon');
     if (filterIcon) {
       filterIcon.addEventListener('click', () => {
-        changeIcon();
+        changeIcon(filterIcon);
       })
     }
 
@@ -541,21 +685,32 @@ const eventsLogic = (() => {
       //Event Listener for favorite icon clicking
       listWrapper.addEventListener('submit', e => {
         favSave(e);
+        pathGet(e);
       })
       //Event Listener for share button clicking
       listWrapper.addEventListener('click', e => {
         shareEvent(e);
       })
+      //Event Listeners for each event to expand info
+      listWrapper.addEventListener('click', e => {
+        eventExpand(e);
+      })
+      //Event Listeners for clicking on link to artist tour in event more
+      listWrapper.addEventListener('click', e => {
+        let target = e.target;
+        if (target.classList.contains('soundcloud-artist')) {
+          const navTours = document.querySelector('.tab-tours');
+          navLogic.tabHighlight(navTours);
+          navLogic.tabURL(navTours);
+        }
+      })
     }
-
-
 
   }
 
-  return { eventsInit, eventHider, arrowFavDisplay, filter };
+  return { eventsInit, eventHider, arrowFavDisplay, filter, favSave, pathGet, shareEvent, changeIcon };
 
 })();
-
 
 
 //Recent Events Slider Module
@@ -676,11 +831,13 @@ const sliderLogic = (() => {
     }
     //Jump to event
     let event = document.getElementById(`${eventID}`);
-    event.scrollIntoView({block: 'center'});
-    //Expand event by simulating click
-    eventsLogic.eventHider();
-    event.children[5].classList.remove('hide');
-    eventsLogic.arrowFavDisplay(event.children[5]);
+    if (event) {
+      event.scrollIntoView({block: 'center'});
+      //Expand event by simulating click
+      eventsLogic.eventHider();
+      event.children[5].classList.remove('hide');
+      eventsLogic.arrowFavDisplay(event.children[5]);
+    }
   }
 
   //Initialize slider width
@@ -779,6 +936,273 @@ const sliderLogic = (() => {
 
 })();
 
+//Festivals Module
+const festivalsLogic = (() => {
+  //Function that goes through all festivals and hides them
+  const festivalHider = (tab) => {
+    //Check classes based on tab section
+    let tabList;
+    let classCheck;
+    if (tab === 'festival') {
+      tabList = document.querySelector('.festival-list');
+      classCheck = 'festival';
+    } else if (tab === 'tour') {
+      tabList = document.querySelector('.tours-list-wrapper');
+      classCheck = 'event';
+    }
+
+    if (tabList) {
+      for (let i=0; i<tabList.children.length; i+=1) {
+        let festival = tabList.children[i];
+        if (festival.classList.contains(classCheck)) {
+          festival.children[3].classList.add('hide');
+          //Hide favorite icon if not save
+          if (!festival.children[2].children[1].classList.contains('saved')) {
+            let arrowLink = festival.children[1];
+            let favorite = festival.children[2];
+            arrowLink.classList.remove('hide');
+            favorite.classList.add('hide');
+          }
+        }
+      }
+    }
+  }
+
+  //Function to expand festival info
+  const festivalExpand = (e, tab) => {
+    let target = e.target;
+
+    //Check classes based on tab section
+    let classCheck;
+    let classMore;
+    if (tab === 'festival') {
+      classCheck = 'festival';
+      classMore = 'festival-more';
+    } else if (tab === 'tour') {
+      classCheck = 'event';
+      classMore = 'event-more'
+    }
+
+    let festMore;
+    //Determine what was clicked
+    //Do not hide when clicking favorites
+    if (!target.classList.contains('favorite')) {
+      if (target.classList.contains(classCheck)) {
+        //if click on festival div
+        festMore = target.children[3];
+      } else if (target.parentNode.classList.contains(classCheck)
+      && !target.classList.contains(classMore)) {
+        //if click on date info wrapper
+        festMore = target.parentNode.children[3];
+      } else if (target.parentNode.parentNode.classList.contains(classCheck)
+      && !target.parentNode.classList.contains(classMore)) {
+        //if click on date wrapper or festival info
+        festMore = target.parentNode.parentNode.children[3];
+      } else if     (target.parentNode.parentNode.parentNode.classList.contains(classCheck) 
+      && !target.parentNode.parentNode.classList.contains(classMore)) {
+        //if click on festival pic wrapper or festival dates
+        festMore = target.parentNode.parentNode.parentNode.children[3];
+      } else if (target.parentNode.parentNode.parentNode.parentNode.classList.contains(classCheck)) {
+        //if click on festival pic or date divs
+        festMore = target.parentNode.parentNode.parentNode.parentNode.children[3];
+      } else {
+        //Ignore all other clicks
+        return;
+      }
+    } else {
+      //Ignore all other clicks
+      return;
+    }
+
+    //Hide if click on already unhidden event
+    if (!festMore.classList.contains('hide')) {
+      festMore.classList.add('hide');
+    } else {
+      //Hide all previous events
+      festivalHider(tab);
+      //Show info on selected
+      festMore.classList.remove('hide');
+    }
+
+    //Display favorite or arrow icon
+    eventsLogic.arrowFavDisplay(festMore);
+  }
+
+
+
+  //Function to initialize festival handlers
+  const festivalsInit = () => {
+    //Event Listeners for clicking buttons in a festival
+    const festivalList = document.querySelector('.festival-list');
+    if (festivalList) {
+      //Event Listener for favorite icon clicking
+      festivalList.addEventListener('submit', e => {
+        eventsLogic.favSave(e);
+        eventsLogic.pathGet(e);
+      })
+      //Event Listeners for share button clicking
+      festivalList.addEventListener('click', e => {
+        eventsLogic.shareEvent(e);
+      })
+      //Event Listeners for each festival to expand info
+      festivalList.addEventListener('click', e => {
+        festivalExpand(e, 'festival');
+      })
+    }
+  }
+
+  return { festivalsInit, festivalExpand }
+
+})();
+
+
+//Tours Module
+const toursLogic = (() => {
+  //Function to give search suggestions
+
+  //Automatically search if complete an artist's name
+  const tourSearch = () => {
+    const tourSearchBox = document.querySelector('.tour-search-box');
+    if (tourSearchBox) {
+      const noArtists = document.querySelector('.no-artists');
+      const foundArtists = document.querySelector('.found-artists');
+      //Get searchbox input
+      term = tourSearchBox.value.toLowerCase();
+      const searchIcon = document.querySelector('.tour-search-icon');
+      //Put magnifying icon back if just whitespace
+      if (term.trim() === '') {
+        searchIcon.classList.remove('tour-x');
+      } else {
+        searchIcon.classList.add('tour-x');
+      }
+
+      //Only Start suggesting after 2 inputs
+      if (term.length < 2) {
+        noArtists.classList.add('hide');
+        foundArtists.classList.add('hide');
+        foundArtists.innerHTML = ``;
+        return;
+      } else {
+        //Create array of artist suggestions max 5
+        artists = gon.artists;
+
+        suggestions = []
+        for (let i=0; i<artists.length; i+=1) {
+          let artist = artists[i][0];
+          let id = artists[i][1];
+          if (artist.toLowerCase().includes(term)) {
+            suggestions.push([artist, artist.toLowerCase().indexOf(term), id])
+          }
+          if (suggestions.length === 5) {
+            break;
+          }
+        }
+        //Check if no suggestions
+        if (suggestions.length === 0) {
+          noArtists.classList.remove('hide');
+          foundArtists.classList.add('hide');
+          foundArtists.innerHTML = ``;
+        } else {
+          //Display suggestions
+          noArtists.classList.add('hide');
+          foundArtists.classList.remove('hide');
+          foundArtists.innerHTML = ``;
+          //Want to highlight part of artist that was searched
+          for (let i=0; i<suggestions.length; i+=1) {
+            let link = document.createElement('a');
+            link.href = `/tours?artist=${suggestions[i][2]}`;
+            link.setAttribute('data-remote', 'true');
+
+            link.innerHTML = `
+              <div>${suggestions[i][0].slice(0, suggestions[i][1])}</div><div class='highlight'>${suggestions[i][0].slice(suggestions[i][1], suggestions[i][1]+term.length)}</div><div>${suggestions[i][0].slice(suggestions[i][1]+term.length, suggestions[i][0].length)}</div>
+            `;
+            foundArtists.appendChild(link);
+          }
+        }
+        //Automatically follow suggestion if only one and typed term matches exactly
+        if (suggestions.length === 1 && suggestions[0][0].toLowerCase() === term) {
+          //Don't render and just place the name in the search bar if the page is already the searched artist
+          const toursArtist = document.querySelector('.tours-artist');
+          if (toursArtist.innerHTML.trim().slice(0,-5) === suggestions[0][0]) {
+            tourSearchBox.value = suggestions[0][0];
+            foundArtists.classList.add('hide');
+          } else {
+            foundArtists.children[0].click();
+          }
+        }
+
+      }
+    }
+  }
+
+  //Function to add No artists found to searchbox
+  const noArtistsAdd = () => {
+    const noArtistsFound = document.querySelector('.no-artists');
+    noArtistsFound.classList.add('hide');
+    const tourSearchBox = document.querySelector('.tour-search-box');
+    tourSearchBox.value = noArtistsFound.innerHTML.trim();
+  }
+
+
+  //Function to initialize tour handlers
+  const toursInit = () => {
+    //Event Listener for typing into search box
+    const tourSearchBox = document.querySelector('.tour-search-box');
+    if (tourSearchBox) {
+      tourSearchBox.addEventListener('keyup', () => {
+        tourSearch();
+      })
+    }
+
+    //Event Listener for clicking on No artists found suggestion
+    const noArtistsFound = document.querySelector('.no-artists');
+    if (noArtistsFound) {
+        noArtistsFound.addEventListener('click', () => {
+          noArtistsAdd();
+      })
+    }
+
+    //Event Listener for clicking on filter icon
+    const searchIcon = document.querySelector('.tour-search-icon');
+    if (searchIcon) {
+      searchIcon.addEventListener('click', () => {
+        eventsLogic.changeIcon(searchIcon);
+      })
+    }
+
+    //Event Listeners for clicking buttons in a tour
+    const toursList = document.querySelector('.tours-list-wrapper');
+    if (toursList) {
+      //Event Listener for favorite icon clicking
+      toursList.addEventListener('submit', e => {
+        eventsLogic.favSave(e);
+        eventsLogic.pathGet(e);
+      })
+      //Event Listeners for share button clicking
+      toursList.addEventListener('click', e => {
+        eventsLogic.shareEvent(e);
+      })
+      //Event Listeners for each festival to expand info
+      toursList.addEventListener('click', e => {
+        festivalsLogic.festivalExpand(e, 'tour');
+      })
+      //Event Listeners for clicking on link to artist tour in event more
+      toursList.addEventListener('click', e => {
+        let target = e.target;
+        if (target.classList.contains('soundcloud-artist')) {
+          const navTours = document.querySelector('.tab-tours');
+          navLogic.tabHighlight(navTours);
+          navLogic.tabURL(navTours);
+        }
+      })
+    }
+  }
+
+  return { toursInit }
+
+})();
+
+
 
 //When page is loaded
 document.addEventListener('turbolinks:load', function() {
@@ -791,14 +1215,27 @@ document.addEventListener('turbolinks:load', function() {
     }
   })
 
+  //Initialize Nav 
+  navLogic.navInit();
+  //Highlight Correct Tab on First Load
+  navLogic.tabHighlightOnLoad();
+
+
   //Initialize Recent Slider
   const recentSlider = document.querySelector('.recent-slider');
   sliderLogic.sliderInit(recentSlider);
-
   //Initialize Fav Slider
   const favSlider = document.querySelector('.fav-slider');
   sliderLogic.sliderInit(favSlider);
 
+
   //Initialize Event listeners
   eventsLogic.eventsInit();
+
+  //Initialize Festival Listeners
+  festivalsLogic.festivalsInit();
+
+  //Initialize Tour Listeners
+  toursLogic.toursInit();
+
 })

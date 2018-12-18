@@ -1,0 +1,27 @@
+if (document.getElementById('festivals-wrapper')) {
+  const concertsWrapper = document.getElementById('concerts-wrapper');
+  const festivalsWrapper = document.getElementById('festivals-wrapper');
+  const toursWrapper = document.getElementById('tours-wrapper');
+
+  //Determine if tab has been visited before
+  if (festivalsWrapper.children.length > 0) {
+    //Hide everything except concerts page
+    concertsWrapper.classList.add('hide');
+    festivalsWrapper.classList.remove('hide');
+    toursWrapper.classList.add('hide');
+  } else {
+    concertsWrapper.classList.add('hide');
+    festivalsWrapper.classList.remove('hide');
+    toursWrapper.classList.add('hide');
+    //Only want to render page if tab has not been visited yet
+    festivalsWrapper.innerHTML = `
+      <%= escape_javascript( render('pageFestivals')) %>
+    `;
+
+    //Initialize Festival Listeners
+    festivalsLogic.festivalsInit();
+  }
+
+
+
+}

@@ -41,6 +41,12 @@ class EventsController < ApplicationController
     #Prepare new tags
     @eventNew = get_events(@locationsToggle, false, true, favsArr)
 
+    #Render
+    respond_to do |format|
+      format.js
+      format.html
+    end
+
   end
 
   #Location Popup
@@ -158,24 +164,111 @@ class EventsController < ApplicationController
 
   #Favorites
   def new
-    #Prepare favorites for slider
-    favsArr = JSON.load(cookies.encrypted[:favsArr])
+    #Get event that was clicked
     eventID = params[:eventID].to_i
-
+    #Get favorites from cookies
+    favsArr = JSON.load(cookies.encrypted[:favsArr])
+    #Push event to favorites or delete if same event
     if favsArr.include? eventID
       favsArr.delete(eventID)
     else
       favsArr.push(eventID)
     end 
+
+    #Save favs arr to cookies
+    cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+
+    #Need only IDs for festivals
+    @favsArr = favsArr
+    #Get event arr from list of event IDs for Cities
     @eventFavs = get_favs(favsArr)
 
-    #Set fav cookies
-    cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+    #Only diplay fav slider if in Cities
+    @displayFavs = params[:path] === '/' ? true : false
+   
 
     respond_to do |format|
       format.js
     end
 
+  end
+
+
+  #Festivals
+  def festivals 
+    #Get festival events
+    @festivalDatesArr = get_festivals()
+    #Get month headers
+    @months = get_months(@festivalDatesArr)
+
+    #Repeating Preparation Steps
+    #Prepare favorite cookies for slider
+    if (cookies.encrypted[:favsArr])
+      favsArr = JSON.load(cookies.encrypted[:favsArr])
+    else
+      favsArr = []
+      cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+    end
+
+    #Use favsArr to get list of event IDs because just need ID and not entire event
+    @favsArr = favsArr
+
+    #Prepare new tags for recently added festivals
+    @eventNew = new_festivals(@festivalDatesArr)
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
+
+  end
+
+
+  #Tours
+  def tours
+    #List of artists to pass to JS
+    #gon.artists = Artist.all.order(:name).map { |a| a.name }
+    gon.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
+
+    @renderTour = false
+
+    #Check if search term was sent
+    if params[:artist]
+      @artist = Artist.find_by(id: params[:artist])
+      @renderTour = true
+    else
+      #Pick random artist otherwise
+      @artist = get_random_artist()
+    end
+
+    #Find events if there are any
+    today = Time.now.strftime('%Y-%m-%d')
+    @events = @artist.events.where('date >= ?', today)
+    #Prepare months
+    @months = get_months_tour(@events)
+    #Prepare new tags for recently added tours
+    @eventNew = new_tours(@events)
+
+    #Repeating Preparation Steps  
+    #Prepare favorite cookies for slider
+    if (cookies.encrypted[:favsArr])
+      favsArr = JSON.load(cookies.encrypted[:favsArr])
+    else
+      favsArr = []
+      cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+    end
+
+    #Get event arr from list of event IDs for Cities
+    @eventFavs = get_favs(favsArr)
+
+
+
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
+  
   end
 
 
@@ -336,12 +429,11 @@ class EventsController < ApplicationController
     #Prepare locations for get_events function
     locations_edit = locationsPrepare(locationsActive)
     #See if states in locations_edit array and on or after current date
-    today = Time.now.strftime('%Y-%m-%d');
+    today = Time.now.strftime('%Y-%m-%d')
     #Decide which array to return
     if recent
       #Array of recent events max 10
       return Event.where(state: locations_edit).or(Event.where(id: favsArr)).where('date >= ?', today).order(added: :desc).limit(10);
-      #return Event.order(added: :desc).where(state: locations_edit).where('date >= ?', today).limit(10);
     elsif newEvent
       #Array of recently added events no older than last week
       lastWeek = (Time.now - (7*24*60*60)).strftime('%Y-%m-%d');
@@ -366,6 +458,94 @@ class EventsController < ApplicationController
     favEventArr = Event.order(:date).where(id: favsArr)
     return favEventArr if favEventArr.length > 0
     return []
+  end
+
+  #Get festival event list
+  def get_festivals() 
+    #Start from 3 days ago since can be in the middle of a festival
+    threeDaysAgo = (Time.now - (3*24*60*60)).strftime('%Y-%m-%d')
+    #Find relevant events
+    events = Event.where(festival: 1).where('date >= ?', threeDaysAgo)
+
+    #Make hash of hashes that include all necessary info
+    festivalDatesArr = {}
+    events.each do |event|
+      #Need to account for same name different locations
+      name = "#{event.title} #{event.location}"
+      if festivalDatesArr.has_key?(name)
+        festivalDatesArr[name]['dates'].push(event.date) 
+      else
+        festName = "#{event.title} #{event.location}"
+        festivalDatesArr[festName] = {
+          'dates' => [event.date],
+          'id' => event.id,
+          'title' => event.title,
+          'location' => event.location,
+          'ages' => event.ages,
+          'link' => event.ticketLink,
+          'address' => event.address
+        }
+      end
+    end
+    return festivalDatesArr
+  end
+
+  #Get month headers
+  def get_months(festivalDatesArr)
+    months = []
+    festivalDatesArr.each do |festival, info|
+      info['dates'].each do |date|
+        month = DateTime.parse(date).strftime('%B')
+        months.push(month) unless months.include? month
+      end
+    end
+    return months
+  end
+
+  #Get new festivals
+  def new_festivals(festivalDatesArr) 
+    newFestivalsArr = []
+    #Array of recently added events no older than last week
+    lastWeek = (Time.now - (7*24*60*60)).strftime('%Y-%m-%d');
+    festivalDatesArr.each do |festival, info|
+      if Event.find_by(id: info['id']).added >= lastWeek
+        newFestivalsArr.push(info['id'])
+      end
+    end
+    return newFestivalsArr
+  end
+
+  #Get random artist for tours
+  def get_random_artist()
+    today = Time.now.strftime('%Y-%m-%d')
+
+    randArtist = Artist.find_by(id: rand(Artist.count))
+    while randArtist == nil || randArtist.events.where('date >= ?', today).length < 20 do
+      randArtist = Artist.find_by(id: rand(Artist.count))
+    end
+    return randArtist
+  end
+
+  #Get tour months
+  def get_months_tour(eventsArr)
+    months = []
+    eventsArr.each do |event|
+      month = DateTime.parse(event.date).strftime('%B')
+      months.push(month) unless months.include? month
+    end
+    return months
+  end
+
+  #Get new tours
+  def new_tours(events)
+    new_tours = []
+    lastWeek = (Time.now - (7*24*60*60)).strftime('%Y-%m-%d');
+    events.each do |event|
+      if event.added >= lastWeek
+        new_tours.push(event)
+      end
+    end
+    return new_tours
   end
 
   #Translate state abbreviations to full

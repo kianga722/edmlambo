@@ -1,9 +1,10 @@
-if (<%= !@eventFavs.nil? %>) {
+if (<%= @displayFavs %>) {
   const favs = document.querySelector('.fav-container');
 
   favs.innerHTML = `
     <%= escape_javascript( render('favs')) %>
   `;
+
 
   const favSlider = document.querySelector('.fav-slider');
   sliderLogic.sliderInit(favSlider);

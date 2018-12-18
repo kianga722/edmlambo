@@ -22,12 +22,10 @@
 
 a {
   text-decoration: none;
-  color: inherit;
 }
 
 a:hover {
   text-decoration: none;
-  color: inherit;
 }
 
 body {
@@ -58,9 +56,17 @@ Nav Styling
 .tab-tours {
   display: inline-block;
   height: 55px;
+}
 
+
+.tab-title {
   color: #a0dddd;
-  font-weight: 900;
+  font-weight: 700;
+  opacity: 0.5;
+}
+
+.tab-select {
+  opacity: 1;
 }
 
 .tab-cities {
@@ -164,7 +170,7 @@ Change Locations Styling
 #popup-bg {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 102%;
   top: 0;
   z-index: 998;
 
@@ -510,6 +516,12 @@ Event Slider and Fav Slider Styling
 }
 
 .slide-title {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 3px;
+  overflow: hidden;
+
   color: #d5d5d5;
 }
 
@@ -529,14 +541,18 @@ Event Slider and Fav Slider Styling
 Filter bar Styling
 */
 
-.filter-wrapper {
+.filter-wrapper,
+.tour-search-wrapper {
   position: relative;
   margin: 15px 0 20px;
 }
 
 .filter-icon-bg,
 .filter-icon,
-.filter-x {
+.filter-x,
+.tour-search-icon-bg,
+.tour-search-icon,
+.tour-x {
   position: absolute;
   top: 0;
   left: 0;
@@ -548,27 +564,32 @@ Filter bar Styling
   border-bottom-left-radius: 5px;
 }
 
-.filter-icon-bg {
+.filter-icon-bg,
+.tour-search-icon-bg {
   background-color: #555;
 }
 
-.filter-icon {
+.filter-icon,
+.tour-search-icon {
   background: #555 url(<%= asset_path 'search_icon.png' %>) no-repeat center center;
   background-size: auto 20px;
 }
 
-.filter-x {
+.filter-x,
+.tour-x {
   filter: brightness(3.5);
 
   background: url(<%= asset_path 'x.png' %>) no-repeat center center;
   background-size: auto 20px;
 }
 
-.filter-icon:hover {
+.filter-icon:hover,
+.tour-search-icon:hover {
   cursor: pointer;
 }
 
-.filter-wrapper input[type='text'] {
+.filter-wrapper input[type='text'],
+.tour-search-wrapper input[type='text'] {
   width: 100%;
   height: 32px;
   padding-left: 44px;
@@ -580,15 +601,17 @@ Filter bar Styling
   border-radius: 5px;
 }
 
-.filter-box::placeholder {
+.filter-box::placeholder,
+.tour-search-box::placeholder {
   color: #a5a5a5;
 }
 
 .no-match {
-  margin-top: 6%;
+  margin-top: 9%;
 
   text-align: center;
   color: #ccc;
+  font-size: 15px;
 }
 
 
@@ -606,20 +629,18 @@ Event List Styling
   text-align: center;
 }
 
-.day {
+.day,
+.month {
   margin: 21px 0 5px 20px;
 
   color: #ddb0a0;
   border-bottom: 1px solid #ddb0a0;
 }
 
-.event {
+.event,
+.festival {
   position: relative;
   margin-bottom: 12px;
-}
-
-.event:hover {
-  cursor: pointer;
 }
 
 .event-pic {
@@ -631,24 +652,36 @@ Event List Styling
   background-size: 100% auto;
 }
 
+
 .event-title {
   padding-top: 8px;
 }
 
 .event-title,
 .event-details {
-  margin-left: 69px;
+  margin-left: 100px;
 }
 
 .event-title,
-.event-more {
+.event-more,
+.festival-title,
+.festival-more {
   color: #ccc;
   font-size: 1rem;
 }
 
-.event-details {
+.event-details,
+.festival-details {
   color: #999;
   font-size: .8rem;
+}
+
+.event-ages,
+.festival-ages {
+  padding-left: 10px;
+  margin-left: 10px;
+
+  border-left: 1px solid rgb(34, 34 ,34);
 }
 
 .arrow {
@@ -698,13 +731,15 @@ Event List Styling
 
 
 
-.event-more {
+.event-more,
+.festival-more {
   margin-top: 20px;
   margin-bottom: 32px;
   font-size: .9rem;
 }
 
-.event-links {
+.event-links,
+.festival-links {
   padding-bottom: 16px;
   margin-bottom: 16px;
 
@@ -712,11 +747,13 @@ Event List Styling
   text-align: center;
 }
 
-.event-links a {
+.event-links a,
+.festival-links a {
   display: inline-block;
   width: 44%;  
   padding: 7px;
 
+  color: inherit;
   background-color: #333;
   border-radius: 7px;
 }
@@ -732,24 +769,51 @@ Event List Styling
   padding: 2px;
   border-radius: 3px;
 
+  color: #ccc;
   background-color: #333;
   text-align: center;
 }
 
 .event-more .event-website,
 .event-more .soundcloud-artist,
-.event-more .airbnb-link {
+.event-more .airbnb-link,
+.festival-more .festival-website,
+.festival-more .airbnb-link {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0; 
 }
 
 .event-more .event-map,
 .event-more .soundcloud-link,
-.event-more .airbnb-share {
+.event-more .airbnb-share,
+.festival-more .festival-map,
+.festival-more .airbnb-share {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0; 
   border-left: 1px solid black;
 }
+
+
+.event-pic:hover,
+.event-title:hover,
+.event-details:hover,
+.arrow-link:hover,
+.event-website:hover,
+.event-map:hover,
+.soundcloud-artist:hover,
+.soundcloud-link:hover,
+.tours-soundcloud-link:hover,
+.airbnb-link:hover,
+.airbnb-share:hover,
+.dates-info-wrapper:hover,
+.dates-info-wrapper-tour:hover,
+.festival-website:hover,
+.festival-map:hover,
+.airbnb-link:hover,
+.airbnb-share:hover {
+  cursor: pointer;
+}
+
 
 
 /*
@@ -824,6 +888,184 @@ Share Popup Styling
   font-size: 1rem;
 }
 
+
+
+/*
+Festivals Section Styling
+*/
+
+.dates-info-wrapper {
+  display: flex;
+}
+
+.dates-wrapper {
+  position: relative;
+  width: 84px;
+  height: 100%;
+  padding-left: 12px;
+}
+
+.festival-pic-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;  
+  display: flex;
+  align-items: center;
+}
+
+.festival-pic {
+  height: 54px;
+  width: 95%;
+
+  background-image: url(<%= asset_path 'festival_pic.png' %>);
+  background-size: 90% auto;
+  background-position: left center;
+}
+
+.festival-dates {
+  color: #ccc;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.festival-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 15px;
+}
+
+
+
+/*
+Tours Section Styling
+*/
+
+#tours-wrapper {
+  position: relative;
+  color: #ccc;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: 32px;
+  width: 100%;
+
+  z-index: 999;
+}
+
+.no-artists,
+.found-artists a {
+  display: block;
+  padding: 3px 46px;
+
+  background: #f3f3f3;
+  color: #222 !important;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.no-artists:hover,
+.found-artists a:hover {
+  background: #0bb;
+}
+
+.found-artists a div {
+  display: inline;
+  #float: left;
+}
+
+.highlight {
+  color: #39f;
+}
+
+
+.tours-artist-wrapper {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.tours-pic {
+  position: absolute;
+  width: 85px;
+  height: 85px;
+
+  background-image: url(<%= asset_path 'avicii.jpg' %>);
+  background-size: 100% auto;
+}
+
+.tours-artist,
+.tours-soundcloud-link {
+  margin-left: 100px; 
+}
+
+.tours-artist {
+  padding-top: 8px;
+  margin-bottom: 6px;
+
+  font-size: 18px;
+}
+
+.tours-soundcloud-link {
+  display: inline-block;
+  padding: 4px 10px;
+
+  background-color: #333;
+  border-radius: 7px;
+  font-size: 14px;
+}
+
+.dates-info-wrapper-tour {
+  display: flex;
+  margin-top: 15px;
+}
+
+.dates-wrapper-tour {
+  position: relative;
+  width: 60px;
+  height: 100%;
+}
+
+.tours-pic-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;  
+  display: flex;
+  align-items: center;
+}
+
+.tours-dates {
+  color: #ccc;
+  font-weight: 700;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.tours-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 25px;
+}
+
+.tours-title {
+  color: #ccc;
+  font-size: 1rem;
+}
+
+.tours-details {
+  color: #999;
+  font-size: .8rem;
+}
+
+.tours-list-wrapper .same-artist {
+  color: #888 !important;
+  cursor: default;
+}
 
 
 

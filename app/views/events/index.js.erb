@@ -1,0 +1,45 @@
+if (document.getElementById('concerts-wrapper')) {
+  const concertsWrapper = document.getElementById('concerts-wrapper');
+  const festivalsWrapper = document.getElementById('festivals-wrapper');
+  const toursWrapper = document.getElementById('tours-wrapper');
+
+  //Determine if tab has been visited before
+  if (concertsWrapper.children.length > 0) {
+    //Hide everything except concerts page
+    concertsWrapper.classList.remove('hide');
+    festivalsWrapper.classList.add('hide');
+    toursWrapper.classList.add('hide');
+
+    //Re-render favoriteSlider in case new favs were added
+    const favs = document.querySelector('.fav-container');
+    favs.innerHTML = `
+      <%= escape_javascript( render('favs')) %>
+    `;
+    const favSlider = document.querySelector('.fav-slider');
+    sliderLogic.sliderInit(favSlider);
+
+  } else {
+    concertsWrapper.classList.remove('hide');
+    festivalsWrapper.classList.add('hide');
+    toursWrapper.classList.add('hide');
+    //Only want to render page if tab has not been visited yet
+    concertsWrapper.innerHTML = `
+      <%= escape_javascript( render('pageConcerts')) %>
+    `;
+
+    //Initialize Nav 
+    navLogic.navInit();
+
+    //Initialize Recent Slider
+    const recentSlider = document.querySelector('.recent-slider');
+    sliderLogic.sliderInit(recentSlider);
+
+    //Initialize Fav Slider
+    const favSlider = document.querySelector('.fav-slider');
+    sliderLogic.sliderInit(favSlider);
+
+    //Initialize Event listeners
+    eventsLogic.eventsInit();
+  }
+
+}

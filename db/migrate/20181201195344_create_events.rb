@@ -10,6 +10,7 @@ class CreateEvents < ActiveRecord::Migration[5.2]
       t.string :added
       t.string :ticketLink
       t.string :address
+      t.boolean :festival
 
       t.timestamps
     end

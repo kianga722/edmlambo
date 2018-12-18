@@ -1,0 +1,167 @@
+<div class='festival-list'>
+
+  <% @months.each do |month| %>
+    <div class='month'>
+      <%= month %>
+    </div>
+
+    <% @festivalDatesArr.each do |festival, info| %>
+      <% if DateTime.parse(info['dates'][0]).strftime('%B') == month %>
+
+        <div class='festival'>
+
+          <div class='dates-info-wrapper'>
+  <!-- Date Icon -->
+
+            <div class='dates-wrapper'>
+              
+              <div class='festival-pic-wrapper'>
+                <div class='festival-pic'>
+                </div>
+              </div>
+
+              <div class='festival-dates'>
+
+                <% if info['dates'].length == 1 %>
+                  <div>
+                    <%= DateTime.parse(info['dates'][0]).strftime('%b %d') %>
+                  </div>
+                <% elsif info['dates'].length == 2 %>
+                  <div>
+                    <%= DateTime.parse(info['dates'][0]).strftime('%b %d')  %>
+                  </div>
+                  <div>
+                    <%= DateTime.parse(info['dates'][1]).strftime('%b %d')  %>
+                  </div>
+                <% else %>
+                  <div>
+                    <span>
+                      <%= DateTime.parse(info['dates'][0]).strftime('%b %d')  %>
+                    </span>
+                    <span>
+                      &nbsp;-&nbsp;
+                    </span>
+                  </div>  
+
+                  <% current = DateTime.parse(info['dates'][0]) %>
+                  <% info['dates'].drop(1).each do |date| %>
+                    <% prev = current %>
+                    <% current += 1 %>
+                    <% if DateTime.parse(date) != current %>
+                      <div>
+                        <%= prev.strftime('%b %d') %>
+                      </div>
+                      <div>
+                        <span>
+                          <%= current.strftime('%b %d') %>
+                        </span>
+                        <span>
+                          &nbsp;-&nbsp;
+                        </span>
+                      </div>  
+                      <% current = DateTime.parse(date) %>
+                    <% elsif date === info['dates'][-1] %>
+                      <div>
+                        <%= DateTime.parse(date).strftime('%b %d') %>
+                      </div>
+                    <% end %> 
+                  <% end %>
+
+                <% end %>
+
+              </div>
+
+            </div>
+
+      <!-- Regular Details -->
+            <div class='festival-info'>
+              <div class='festival-title'>
+                <%= info['title'] %>
+              </div>
+
+              <div class='festival-details'>
+                <span>
+                  <%= info['location'] %>
+                </span>
+                
+                <% if info['ages'] %>
+                  <span class='festival-ages'>
+                    <%= info['ages'] %>
+                  </span>
+                <% end %>
+              </div>
+            </div>
+        
+          </div>
+
+  <!-- Favorite button -->
+
+          <% if @favsArr.include? info['id'] %>
+
+            <% if @eventNew.include? info['id'] %>
+              <div class='arrow-link new hide'>
+                new
+              </div>
+            <% else %>
+              <div class='arrow-link arrow hide'>
+              </div>
+            <% end %>
+
+            <form class='favorite-wrapper' action='/events' method='new' data-remote='true'>
+              <input type='hidden' name='eventID' value='<%= info['id'] %>'>
+              <input type='submit' class='favorite saved' value=''>
+            </form>
+
+          <% else %>
+
+            <% if @eventNew.include? info['id'] %>
+              <div class='arrow-link new'>
+                new
+              </div>
+            <% else %>
+              <div class='arrow-link arrow'>
+              </div>
+            <% end %>
+
+            <form class='favorite-wrapper hide' action='/events' method='new' data-remote='true'>
+              <input type='hidden' name='eventID' value='<%= info['id'] %>'>
+              <input type='submit' class='favorite' value=''>
+            </form>
+
+          <% end %>
+
+
+  <!-- Event More Details -->  
+          <div class='festival-more hide'>
+
+            <div class='festival-links'>
+              <a href='<%= info['link'] %>' target='_blank' rel='noopener noreferrer' class='festival-website'>
+                Event Website
+              </a
+              ><a href='https://maps.google.com/?q=<%= info['address'] %>' target='_blank' rel='noopener noreferrer' class='festival-map'>
+                Venue Map
+              </a>
+            </div>
+
+            <div class='hotel-links'>
+              <a class='airbnb-link'>
+                Hotels & Airbnbs
+              </a
+              ><a class='airbnb-share'>
+                Share
+              </a>
+            </div>
+
+          </div>            
+          
+
+
+        </div>
+
+      <% end %>
+
+    <% end %>
+
+  <% end %>
+
+</div>

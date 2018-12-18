@@ -16,7 +16,18 @@
             <div class='event-pic'></div>
 
             <div class='event-title'>
-              <%= event.title %>
+              <% stringArtists = '' %>
+              <% event.artists.each do |artist| %>
+                <% if !event.title.include? artist.name %>
+                  <% stringArtists += artist.name + ', ' %>
+                <% end %>
+              <% end %>
+
+              <% if stringArtists.length > 0 %>
+                <%= (event.title + ': ' + stringArtists)[0..-3] %>
+              <% else %>
+                <%= event.title %>
+              <% end %>
             </div>
 
             <div class='event-details'>

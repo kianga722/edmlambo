@@ -1606,7 +1606,7 @@ Hide Styling
 Media Queries
 */
 
-@media only screen and (max-width: 1500px) {
+@media (max-width: 1500px) {
   #sidebar-members,
   .downloadApp,
   .sideNotify,
@@ -1618,5 +1618,57 @@ Media Queries
     display: block;
   }
 
+}
+  
+@media (max-width: 750px) {
+  .container-fluid {
+    padding: 0;
+  }
 
+  .page {
+    padding: 0;
+  }
+
+  .tabs {
+    margin-top: 5px;
+    margin-bottom: -10px;
+  }
+
+  .tabs span {
+    vertical-align: 22px;
+    font-size: 12px;
+  }
+
+  .tab-cities,
+  .tab-festivals,
+  .tab-tours {
+    padding-left: 0;
+    margin-left: 10px; 
+    background-size: auto 22px;
+  }
+
+  .tab-festivals,
+  .tab-tours {
+    margin-left: 20px;
+  }
+
+  .logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .event-slide {
+    width: 140px;
+  }
+
+  .event-title,
+  .event-details {
+    margin-left: 75px;
+  }
+
+  .soundcloud-links a,
+  .hotel-links a {
+    width: 47%;
+  }
+  
 }

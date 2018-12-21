@@ -419,14 +419,15 @@ const eventsLogic = (() => {
     let favorite;
     let favSaved;
 
-    if (window.location.pathname === '/') {
-      arrowLink = event.children[3];
-      favorite = event.children[4];
-      favSaved = eventMore.parentNode.children[4].children[1];
-    } else {
+    if (window.location.pathname === '/festivals'
+      ||window.location.pathname === '/tours') {
       arrowLink = event.children[1];
       favorite = event.children[2];
       favSaved = eventMore.parentNode.children[2].children[1];
+    } else {
+      arrowLink = event.children[3];
+      favorite = event.children[4];
+      favSaved = eventMore.parentNode.children[4].children[1];
     }
 
     //Check if specific eventMore is hidden and if it is a favorite
@@ -1065,7 +1066,11 @@ const sliderLogic = (() => {
     //Decide width increment
     let stepWidth;
     if (sliderType === document.querySelector('.recent-slider')) {
-      stepWidth = 240;
+      if (window.innerWidth <= 750) {
+        stepWidth = 140;
+      } else {
+        stepWidth = 240;
+      }
     } else if (sliderType === document.querySelector('.fav-slider')) {
       stepWidth = 110;
     } else {

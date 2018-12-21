@@ -43,11 +43,61 @@ class EventsController < ApplicationController
 
     #Render
     respond_to do |format|
-      format.js
+      format.js 
       format.html
     end
 
   end
+
+
+  #Show Place
+  def show
+    location = Place.find_by(link: params[:id]).location
+
+    #Set location cookies to selected location only
+    @locationsAdded = [location]
+    @locationsToggle = [[location, 'active']]
+    #Set checkbox cookies
+    cookies.permanent.encrypted[:locations] = JSON.dump(@locationsAdded)
+    #Set toggle cookies
+    cookies.permanent.encrypted[:locationsToggle] = JSON.dump(@locationsToggle)
+
+    #Repeating Preparation Steps
+    #Prepare favorite cookies for slider
+    if (cookies.encrypted[:favsArr])
+      favsArr = JSON.load(cookies.encrypted[:favsArr])
+    else
+      favsArr = []
+      cookies.permanent.encrypted[:favsArr] = JSON.dump(favsArr)
+    end
+    #Get event arr from list of event IDs
+    @eventFavs = get_favs(favsArr)
+
+    #Prepare variables to check
+    @eventsNoFavs = get_events(@locationsToggle)
+    @togglesInactive = isAllInactive(@locationsToggle)
+
+    #Prepare variables to render
+    @events = get_events(@locationsToggle, false, false, favsArr)
+    @dates = get_dates(@events)
+
+    #Prepare events for slider
+    @eventSlider = get_events(@locationsToggle, true, false, favsArr)
+
+    #Prepare new tags
+    @eventNew = get_events(@locationsToggle, false, true, favsArr)
+
+    #Render
+    respond_to do |format|
+      format.html { render action: 'index'}
+    end
+
+  end
+
+
+
+
+
 
   #Location Popup
   def update
@@ -196,6 +246,16 @@ class EventsController < ApplicationController
 
   #Festivals
   def festivals 
+    #Check if have location cookies
+    #Set default to New York otherwise
+    if (cookies.encrypted[:locations])
+      @locationsAdded = JSON.load(cookies.encrypted[:locations])
+    else
+      @locationsAdded = ['New York']
+      #Set checkbox cookies
+      cookies.permanent.encrypted[:locations] = JSON.dump(@locationsAdded)
+    end
+
     #Get festival events
     @festivalDatesArr = get_festivals()
     #Get month headers
@@ -226,12 +286,20 @@ class EventsController < ApplicationController
 
   #Tours
   def tours
+    #Check if have location cookies
+    #Set default to New York otherwise
+    if (cookies.encrypted[:locations])
+      @locationsAdded = JSON.load(cookies.encrypted[:locations])
+    else
+      @locationsAdded = ['New York']
+      #Set checkbox cookies
+      cookies.permanent.encrypted[:locations] = JSON.dump(@locationsAdded)
+    end
+
     #List of artists to pass to JS
+    #Use global gon variable for now
     #gon.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
     #gon.watch.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
-    #Gon.global.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
-
-
 
     @renderTour = false
 

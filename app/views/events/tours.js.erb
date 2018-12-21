@@ -35,7 +35,12 @@ if (document.getElementById('tours-wrapper')) {
     //Initialize Festival Listeners
     toursLogic.toursInit();
 
+    //Scroll to top 
+    document.body.scrollIntoView({block: 'start'});
+    
   }
 
+  //Hide loading animation
+  loadLogic.showLoad(false);
 
 }

@@ -19,5 +19,10 @@ if (<%= @renderPage %>) {
   //Filter if had previous terms
   eventsLogic.filter();
 
+  //Hide loading animation
+  loadLogic.showLoad(false);
 
+} else {
+  //Hide loading animation
+  loadLogic.showLoad(false);
 }

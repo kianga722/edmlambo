@@ -1,0 +1,73 @@
+<div id='notification-wrapper'>
+
+  <div id='notification-popup' class='hide'>
+
+    <div id='popup-close-notification'>
+      <div class='popup-icon'></div>
+    </div>
+
+    <div class='email-title'>
+      Email Address
+    </div>
+
+    <input id='notifyEmail' type='text' placeholder='Enter email (required)'>
+
+    <div class='frequency-title'>
+      Get Notified
+    </div>
+
+    <div class='frequency dropdown'>
+      <div id='freq-choice' class='dropdown-toggle' data-toggle='dropdown'>
+        Once a week
+      </div>
+      <div class='frequency-menu dropdown-menu dropdown-menu'>
+        <div class='dropdown-item'>At most once a day</div>
+        <div class='dropdown-item'>Twice a week</div>
+        <div class='dropdown-item'>Once a week</div>
+        <div class='dropdown-item'>Twice a month</div>
+        <div class='dropdown-item'>Once a month</div>
+      </div>
+    </div>
+
+    <div class='location-title'>
+      Add Locations to Watch
+    </div>
+
+    <div class='search-wrapper'>
+      <input class='search-notify-box' type='text' placeholder='Search for city or state'>
+      <div class='search-notify-submit'></div>
+    </div>
+
+    <div class='location-preselect-notify'>
+      <%= render 'states_dropdown' %>
+      <%= render 'canada_dropdown' %>
+      <%= render 'cities_dropdown' %>
+    </div>
+
+    <div class='location-remove-title'>
+      Remove Locations to Watch
+    </div>
+
+    <form class='location-notify-added'>
+      
+      <div class='location-item-notify-wrapper'>
+        <% @locationsAdded.each do |location| %>
+          <div class='location-item'>
+            <input type='checkbox' name='<%= location %>' checked='checked'>
+            <label for='<%= location %>'></label>
+            <%= location %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class='done-notify'>
+          Done
+      </div>
+    </form>
+
+
+
+
+  </div>
+
+</div>

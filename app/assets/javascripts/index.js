@@ -1,3 +1,31 @@
+//Loading Logic Module
+const loadLogic = (() => {
+  //Function to hide/unhide elements
+  const showLoad = show => {
+    const loading = document.querySelector('.loading-wrapper');
+    let other;
+    let path = window.location.pathname;
+    if (path === '/festivals') {
+      other = document.getElementById('festivals-wrapper');
+    } else if (path === '/tours') {
+      other = document.getElementById('tours-wrapper');
+    } else {
+      other = document.getElementById('concerts-wrapper');
+    }
+
+    if (show) {
+      loading.classList.remove('hide');
+      other.classList.add('hide');
+    } else {
+      loading.classList.add('hide');
+      other.classList.remove('hide');
+    }
+  }
+
+  return { showLoad };
+
+})();
+
 //Navbar Logic Module
 const navLogic = (() => {
   //Function to highlight current tab
@@ -16,12 +44,12 @@ const navLogic = (() => {
   const tabHighlightOnLoad = (tab) => {
     let path = window.location.pathname;
     let tabCurrent;
-    if (path === '/') {
-      tabCurrent = document.querySelector('.tab-cities');
-    } else if (path === '/festivals') {
+    if (path === '/festivals') {
       tabCurrent = document.querySelector('.tab-festivals');
     } else if (path === '/tours') {
       tabCurrent = document.querySelector('.tab-tours');
+    } else {
+      tabCurrent = document.querySelector('.tab-cities');
     }
     tabHighlight(tabCurrent);
   }
@@ -48,18 +76,21 @@ const navLogic = (() => {
     //Event Listener for Cities option
     const navCities = document.querySelector('.tab-cities');
     navCities.addEventListener('click', () => {
+      loadLogic.showLoad(true);
       tabHighlight(navCities);
       tabURL(navCities);
     })
     //Event Listener for Festivals option
     const navFestivals = document.querySelector('.tab-festivals');
     navFestivals.addEventListener('click', () => {
+      loadLogic.showLoad(true);
       tabHighlight(navFestivals);
       tabURL(navFestivals);
     })
     //Event Listener for Tours option
     const navTours = document.querySelector('.tab-tours');
     navTours.addEventListener('click', () => {
+      loadLogic.showLoad(true);
       tabHighlight(navTours);
       tabURL(navTours);
     })
@@ -87,25 +118,51 @@ const eventsLogic = (() => {
     e.stopImmediatePropagation();
   }
 
-  //Function to Unhide Change Location popup
+  //Function to Unhide Share popup
   const unHidePopupShare = e => {
-    let target = e.target;
-
     const popupShare = document.getElementById('share-popup');
     popupShare.classList.remove('hide');
     //Add top offset to popup
-    let topOffset = window.pageYOffset;
+    let topOffset = window.pageYOffset + 69;
     popupShare.style.top = `${topOffset}px`;
     e.stopImmediatePropagation();
   }
+
+  //Function to Unhide Report popup
+  const unHidePopupReport = e => {
+    const popupReport = document.getElementById('report-popup');
+    popupReport.classList.remove('hide');
+    //Add top offset to popup
+    let topOffset = window.pageYOffset + 100;
+    popupReport.style.top = `${topOffset}px`;
+    e.stopImmediatePropagation();
+    popupReport.children[2].focus();
+  }
+
+  //Function to Unhide Notify popup
+  const unHidePopupNotify = e => {
+    const popupNotify = document.getElementById('notification-popup');
+    popupNotify.classList.remove('hide');
+    //Add top offset to popup
+    let topOffset = window.pageYOffset + 69;
+    popupNotify.style.top = `${topOffset}px`;
+    e.stopImmediatePropagation();
+  }
+  
 
 
   //Add locations through popup options
 
   //Function to check for duplicate locations
-  const isLocationDup = (loc) => {
+  const isLocationDup = (loc, type) => {
     let locationsArr = [];
-    const locationWrapper = document.querySelector('.location-item-wrapper');
+    let locationWrapper;
+    if (type === 'location') {
+      locationWrapper = document.querySelector('.location-item-wrapper');
+    } else {
+      locationWrapper = document.querySelector('.location-item-notify-wrapper');
+    }
+
     for (let i=0; i<locationWrapper.children.length; i+=1) {
       let location = locationWrapper.children[i].children[0].name;
       if (!locationsArr.includes(location)) {
@@ -116,7 +173,7 @@ const eventsLogic = (() => {
   }
 
   //Function to append location item
-  const appendLocation = (location) => {
+  const appendLocation = (location, type) => {
     const div = document.createElement('div');
     div.classList.add('location-item');
     div.innerHTML = `
@@ -124,23 +181,28 @@ const eventsLogic = (() => {
       <label for='${location}'></label>
       ${location}
     `;
-    const locationWrapper = document.querySelector('.location-item-wrapper');
+    let locationWrapper;
+    if (type === 'location') {
+      locationWrapper = document.querySelector('.location-item-wrapper');
+    } else {
+      locationWrapper = document.querySelector('.location-item-notify-wrapper');
+    }
     locationWrapper.appendChild(div);
   }
 
   //Function to Add a location from a dropdown
-  const addLocation = e => {
+  const addLocation = (e, type) => {
     target = e.target;
     if (target.classList.contains('dropdown-item')) {
       //Get location
       locationSelect = target.innerHTML;
       //Do not include duplicates
-      if (isLocationDup(locationSelect)) {
+      if (isLocationDup(locationSelect, type)) {
         return;
       }
 
       //Create and append location
-      appendLocation(locationSelect);
+      appendLocation(locationSelect, type);
     }
   }
   
@@ -166,11 +228,17 @@ const eventsLogic = (() => {
     return keywords;
   }
   //Function to get results of search and decide result actions
-  const searchLocations = () => {
+  const searchLocations = (type) => {
     //Get array of terms
     let keywords = keywordsCreate();
     //Get searchbox input
-    const searchBox = document.querySelector('.search-box');
+    let searchBox;
+    if (type === 'location') {
+      searchBox = document.querySelector('.search-box');
+    } else {
+      searchBox = document.querySelector('.search-notify-box');
+    }
+
     //Remove whitespace and lowercase
     term = searchBox.value.trim().toLowerCase();
     //Return if empty value
@@ -191,12 +259,12 @@ const eventsLogic = (() => {
     }
     //Decide search result action
     if (result) {
-      if (isLocationDup(result)) {
+      if (isLocationDup(result, type)) {
         searchBox.value = '';
         searchBox.placeholder='Location already added!';
         return;
       }
-      appendLocation(result);
+      appendLocation(result, type);
       searchBox.value = '';
       searchBox.placeholder='Location added!'
     } else {
@@ -206,7 +274,7 @@ const eventsLogic = (() => {
   }
 
   //Function to Checkbox logic
-  const checkboxRemove = e => {
+  const checkboxRemove = (e) => {
     target = e.target;
     if (target.classList.contains('location-item')) {
       target.children[0].checked = (target.children[0].checked === true ? false : true);       
@@ -245,6 +313,18 @@ const eventsLogic = (() => {
     popupShare.classList.add('hide');
   }
 
+  //Function to hide report popup 
+  const popupHiderReport = () => {
+    const popupReport = document.getElementById('report-popup');
+    popupReport.classList.add('hide');
+  }
+
+  //Function to hide notify popup 
+  const popupHiderNotify = () => {
+    const popupNotify = document.getElementById('notification-popup');
+    popupNotify.classList.add('hide');
+  }
+
   //Function to hide popup outside popup box
   const popupHiderOutside = e => {
     let target = e.target;
@@ -261,7 +341,14 @@ const eventsLogic = (() => {
           ||target.id === 'share-popup'
           ||target.parentNode.id === 'share-popup'
           ||target.parentNode.parentNode.id === 'share-popup'
-          ||target.parentNode.parentNode.parentNode.id === 'share-popup')
+          ||target.parentNode.parentNode.parentNode.id === 'share-popup'
+          ||target.id === 'report-popup'
+          ||target.parentNode.id === 'report-popup'
+          ||target.id === 'notification-popup'
+          ||target.parentNode.id === 'notification-popup'
+          ||target.parentNode.parentNode.id === 'notification-popup'
+          ||target.parentNode.parentNode.parentNode.id === 'notification-popup'
+          ||target.parentNode.parentNode.parentNode.parentNode.id === 'notification-popup')
         {
           return;
         } else {
@@ -272,6 +359,8 @@ const eventsLogic = (() => {
               locationSubmit();
               popupHider();
               popupHiderLoc();
+              //Show Loading Animation
+              loadLogic.showLoad(true);
               return;
             }
           }
@@ -279,6 +368,18 @@ const eventsLogic = (() => {
           if (!popupShare.classList.contains('hide')) {
             popupHider();
             popupHiderShare();
+            return;
+          }
+          const popupReport = document.getElementById('report-popup');
+          if (!popupReport.classList.contains('hide')) {
+            popupHider();
+            popupHiderReport();
+            return;
+          }
+          const popupNotify = document.getElementById('notification-popup');
+          if (!popupNotify.classList.contains('hide')) {
+            popupHider();
+            popupHiderNotify();
             return;
           }
 
@@ -437,6 +538,9 @@ const eventsLogic = (() => {
         eventShowAll();
         //Put magnifying icon back
         filterIcon.classList.remove('filter-x');
+        //Hide no match message if displayed
+        const noMatch = document.querySelector('.no-match');
+        noMatch.classList.add('hide');
         return;
       }
       //Get current event list
@@ -469,6 +573,9 @@ const eventsLogic = (() => {
         if (dateArr < 1) {
           const noMatch = document.querySelector('.no-match');
           noMatch.classList.remove('hide');
+        } else {
+          const noMatch = document.querySelector('.no-match');
+          noMatch.classList.add('hide');
         }
       }
       //Always change filter icon to X regardless of event listing
@@ -570,11 +677,97 @@ const eventsLogic = (() => {
     let target = e.target;
     
     if (target.classList.contains('airbnb-share')
-      ||target.classList.contains('shareIcon')) {
+      ||target.classList.contains('shareIcon')
+      ||target.classList.contains('shareApp')) {
       unHidePopup(e);
       unHidePopupShare(e);
     }
   }
+
+  //Function to notify event
+  const notifyGetPop = (e) => {
+    let target = e.target;
+    
+    if (target.classList.contains('notificationsGet')
+      ||target.classList.contains('sideNotify')
+      ||target.parentNode.classList.contains('sideNotify')) {
+      unHidePopup(e);
+      unHidePopupNotify(e);
+    }
+  }
+
+  //Function to select notification frequency
+  const freqSelect = (e) => {
+    let target = e.target;
+    
+    if (target.classList.contains('dropdown-item')) {
+      const freqChoice = document.getElementById('freq-choice');
+      freqChoice.innerHTML = `
+        ${target.innerHTML}
+      `;
+    }
+  }
+
+  //Function to fill in members list
+  const membersFill = () => {
+    const membersList = document.querySelector('.members-list');
+    for (let i=1; i<=100; i+=1) {
+      let member = document.createElement('div');
+      member.classList = 'member-container';
+      let rep = 69000 - i
+      member.innerHTML = `
+        <span class='rank'>
+          ${i}.
+        </span>
+        <span class='username'>
+          housegod${i}
+        </span>
+        <span class='rep'>
+          ${rep.toLocaleString()}
+        </span>
+      `;
+      membersList.append(member);
+    }
+  }
+
+  //Function to fill in member sliders list
+  const memberSliderFill = () => {
+    const memberSlider = document.getElementById('member-slider');
+    for (let i=1; i<=10; i+=1) {
+      let memberBlock = document.createElement('div');
+      memberBlock.classList = 'member-block';
+      if (i===1) {
+        memberBlock.innerHTML = `
+          <div class='members-title'>
+            Members
+          </div>
+          <div class='rep-title'>
+            Rep
+          </div>
+        `;
+      }
+      memberSlider.append(memberBlock);
+      for (let j=1; j<=10; j+=1) {
+        let index = (i-1)*10 + j;
+        let member = document.createElement('div');
+        let rep = 69000 - index;
+        member.classList = 'member-container';
+        member.innerHTML = `
+          <span class='rank'>
+            ${index}.
+          </span>
+          <span class='username'>
+            housegod${index}
+          </span>
+          <span class='rep'>
+            ${rep.toLocaleString()}
+          </span>
+        `;
+        memberBlock.append(member);
+      }
+    }
+  }
+
 
   //Function to initalize event handlers
   const eventsInit = () => {
@@ -591,31 +784,27 @@ const eventsLogic = (() => {
     const locationPreselect = document.querySelector('.location-preselect');
     if (locationPreselect) {
       locationPreselect.addEventListener('click', e => {
-        addLocation(e);
+        addLocation(e, 'location');
       })
     }
-   
-
     //Event Listener for search submit
     const searchSubmit = document.querySelector('.search-submit');
     if (searchSubmit) {
       searchSubmit.addEventListener('click', e => {
-        searchLocations();
+        searchLocations('location');
       })
     }
-    
     //Event Listener for Enter key in searchbox
     const searchBox = document.querySelector('.search-box');
     if (searchBox) {
       searchBox.addEventListener('keypress', e => {
         let key = e.keyCode;
         if (key === 13) {
-          searchLocations();
+          searchLocations('location');
         }
       })
     }
     
-
     //Event Listener for checkbox logic
     const locationRemove = document.querySelector('.location-added');
     if (locationRemove) {
@@ -635,6 +824,8 @@ const eventsLogic = (() => {
       done.addEventListener('click', () => {
         popupHider();
         popupHiderLoc();
+        //Show Loading Animation
+        loadLogic.showLoad(true);
       })
     }
   
@@ -645,6 +836,8 @@ const eventsLogic = (() => {
         locationSubmit();
         popupHider();
         popupHiderLoc();
+        //Show Loading Animation
+        loadLogic.showLoad(true);
       })
     }
     
@@ -682,6 +875,8 @@ const eventsLogic = (() => {
     if (locationCurrent) {
       locationCurrent.addEventListener('submit', () => {
         filterGet(locationCurrent);
+        //Show Loading Animation
+        loadLogic.showLoad(true);
       })
     }
     
@@ -716,9 +911,133 @@ const eventsLogic = (() => {
           const navTours = document.querySelector('.tab-tours');
           navLogic.tabHighlight(navTours);
           navLogic.tabURL(navTours);
+          //Show Loading Animation
+          loadLogic.showLoad(true);
         }
       })
     }
+
+    //Event Listener for report button clicking
+    const reportIssue = document.querySelector('.report');
+    if (reportIssue) {
+      reportIssue.addEventListener('click', e => {
+        unHidePopup(e);
+        unHidePopupReport(e);
+      })
+    }
+
+    //Event Listener for share popup X button
+    const popupCloseReport = document.getElementById('popup-close-report');
+    if (popupCloseReport) {
+      popupCloseReport.addEventListener('click', () => {
+        popupHider();
+        popupHiderReport();
+      })
+      //Event Listener for outside popup box
+      document.body.addEventListener('click', e => {
+        popupHiderOutside(e);
+      })
+    }
+
+    //Event Listener for Go to Top button
+    const toTop = document.querySelector('.toTop');
+    if (toTop) {
+      toTop.addEventListener('click', () => {
+        window.scrollTo(0, 0);
+      })
+    }
+
+    //Event Listener for Footer Share App button
+    const shareApp = document.querySelector('.shareApp');
+    if (shareApp) {
+      shareApp.addEventListener('click', e => {
+        shareEvent(e);
+      })
+    }
+
+    //Event Listener for Footer Notify button
+    const notifyGet = document.querySelector('.notificationsGet');
+    if (notifyGet) {
+      notifyGet.addEventListener('click', e => {
+        notifyGetPop(e);
+      })
+    }
+
+    //Event Listener for Sidebar Notify button
+    const notifyGetSide = document.querySelector('.sideNotify');
+    if (notifyGetSide) {
+      notifyGetSide.addEventListener('click', e => {
+        notifyGetPop(e);
+      })
+    }
+
+    //Event Listener for Notifications Frequency selection
+    const freqMenu = document.querySelector('.frequency-menu');
+    if (freqMenu) {
+      freqMenu.addEventListener('click', e => {
+        freqSelect(e);
+      })
+    }
+    //Event Listener for notify dropdown menus
+    const locationPreselectNotify = document.querySelector('.location-preselect-notify');
+    if (locationPreselectNotify) {
+      locationPreselectNotify.addEventListener('click', e => {
+        addLocation(e, 'notify');
+      })
+    }
+    //Event Listener for notify search submit
+    const searchNotifySubmit = document.querySelector('.search-notify-submit');
+    if (searchNotifySubmit) {
+      searchNotifySubmit.addEventListener('click', e => {
+        searchLocations('notify');
+      })
+    }
+
+    //Event Listener for Enter key in notify searchbox
+    const searchNotifyBox = document.querySelector('.search-notify-box');
+    if (searchNotifyBox) {
+      searchNotifyBox.addEventListener('keypress', e => {
+        let key = e.keyCode;
+        if (key === 13) {
+          searchLocations('notify');
+        }
+      })
+    }
+    //Event Listener for notify checkbox logic
+    const locationNotifyRemove = document.querySelector('.location-notify-added');
+    if (locationNotifyRemove) {
+      locationNotifyRemove.addEventListener('click', e => {
+        checkboxRemove(e);
+      })
+    }
+
+    //Event Listener for notify popup X button
+    const popupCloseNotify = document.getElementById('popup-close-notification');
+    if (popupCloseNotify) {
+      popupCloseNotify.addEventListener('click', () => {
+        popupHider();
+        popupHiderNotify();
+      })
+    }
+
+    //Fill in sidebar members list
+    membersFill();
+
+    //Fill in member slider frame
+    memberSliderFill();
+
+    //Event Listener for member slider scrolling
+    const memberSlider = document.getElementById('member-slider');
+    memberSlider.addEventListener('wheel', e => {
+      //Prevent default scrolling of page
+      e.preventDefault();
+      if (e.deltaY > 0) {
+        sliderLogic.shiftLeft(memberSlider);
+      } else {
+        sliderLogic.shiftRight(memberSlider);
+      }
+    })
+
 
   }
 
@@ -735,8 +1054,6 @@ const sliderLogic = (() => {
     let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
     let frameRect = sliderType.parentNode.getBoundingClientRect();
-    //first event
-    let eventFirst = sliderType.children[0].getBoundingClientRect();
     //last event
     let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
 
@@ -749,8 +1066,10 @@ const sliderLogic = (() => {
     let stepWidth;
     if (sliderType === document.querySelector('.recent-slider')) {
       stepWidth = 240;
-    } else {
+    } else if (sliderType === document.querySelector('.fav-slider')) {
       stepWidth = 110;
+    } else {
+      stepWidth = 280;
     }
 
     if (frameRect.right < eventLast.right) {
@@ -771,8 +1090,6 @@ const sliderLogic = (() => {
     let frameRect = sliderType.parentNode.getBoundingClientRect();
     //first event
     let eventFirst = sliderType.children[0].getBoundingClientRect();
-    //last event
-    let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
 
     //Only shift if first event still overflowing to the left
     if (window.getComputedStyle(sliderType).getPropertyValue('transform') === 'none') {
@@ -783,8 +1100,10 @@ const sliderLogic = (() => {
     let stepWidth;
     if (sliderType === document.querySelector('.recent-slider')) {
       stepWidth = 240;
-    } else {
+    } else if (sliderType === document.querySelector('.fav-slider')) {
       stepWidth = 110;
+    } else {
+      stepWidth = 280;
     }
 
     if (eventFirst.left < frameRect.left) {
@@ -946,7 +1265,7 @@ const sliderLogic = (() => {
     })
   }
 
-  return { sliderInit }
+  return { sliderInit, shiftLeft, shiftRight }
 
 })();
 
@@ -1225,6 +1544,8 @@ const toursLogic = (() => {
           const navTours = document.querySelector('.tab-tours');
           navLogic.tabHighlight(navTours);
           navLogic.tabURL(navTours);
+          //Show Loading Animation
+          loadLogic.showLoad(true);
         }
       })
     }
@@ -1238,6 +1559,7 @@ const toursLogic = (() => {
 
 //When page is loaded
 document.addEventListener('turbolinks:load', function() {
+
 
   //Get past invalid CSRF token issue
   const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

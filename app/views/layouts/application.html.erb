@@ -15,6 +15,32 @@
   </head>
 
   <body>
-    <%= yield %>
+
+    <div class='container-fluid'>
+      <div class='page'>
+
+        <%= render 'nav' %>
+
+        <%= render 'loading' %>
+
+        <%= render 'popup_bg' %>
+
+        <%= render 'share' %>
+
+        <%= render 'report' %>
+
+        <%= render 'notifications_form' %>
+
+        <%= yield %>
+
+        <%= render 'sidebar' %>
+
+        <%= render 'memberSlider' %>
+
+        <%= render 'footer' %>
+
+      </div>
+    </div>
+
   </body>
 </html>

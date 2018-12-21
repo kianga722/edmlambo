@@ -180,7 +180,9 @@ Change Locations Styling
 }
 
 #location-popup-wrapper,
-#share-popup-wrapper {
+#share-popup-wrapper,
+#report-popup-wrapper,
+#notification-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
@@ -189,7 +191,9 @@ Change Locations Styling
 }
 
 #location-popup,
-#share-popup {
+#share-popup,
+#report-popup,
+#notification-popup {
   position: absolute;
   width: 83%;
   padding: 10px 25px 15px;
@@ -202,7 +206,9 @@ Change Locations Styling
 }
 
 #popup-close-loc,
-#popup-close-share {
+#popup-close-share,
+#popup-close-report,
+#popup-close-notification {
   position: absolute;
   top: -7px;
   right: -7px;
@@ -223,7 +229,9 @@ Change Locations Styling
 }
 
 #popup-close-loc:hover,
-#popup-close-share:hover {
+#popup-close-share:hover,
+#popup-close-report:hover,
+#popup-close-notification:hover {
   cursor: pointer;
 }
 
@@ -254,7 +262,8 @@ Change Locations Styling
   background-color: white;
 }
 
-.search-submit {
+.search-submit,
+.search-notify-submit {
   position: absolute;
   top: 0;
   right: 0;
@@ -266,11 +275,13 @@ Change Locations Styling
   border-top-right-radius: 5px;
 }
 
-.search-submit:hover {
+.search-submit:hover,
+.search-notify-submit:hover {
   cursor: pointer;
 }
 
-.location-preselect {
+.location-preselect,
+.location-preselect-notify {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
@@ -285,7 +296,8 @@ Change Locations Styling
   background-color: white;
 }
 
-.location-preselect span:hover {
+.location-preselect span:hover,
+.location-preselect-notify span:hover {
   cursor: pointer;
 }
 
@@ -358,6 +370,7 @@ input[type=checkbox] {
   padding: 5px 25px;
   margin-top: 25px;
 
+  border: none;
   border-radius: 5px;
   background-color: white;
 }
@@ -608,7 +621,7 @@ Filter bar Styling
 }
 
 .no-match {
-  margin-top: 9%;
+  padding: 160px 0;
 
   text-align: center;
   color: #ccc;
@@ -623,7 +636,7 @@ Event List Styling
 */
 
 .no-events {
-  margin-top: 25%;
+  padding: 160px 0;
 
   color: #ccc;
   font-size: 1rem;
@@ -1095,9 +1108,515 @@ Tours Section Styling
 
 
 /*
+Footer Styling
+*/
+
+#footer-links {
+  padding: 14px 12px 20px;
+
+  color: #eee;
+  background: #444 url(<%= asset_path 'footer.png' %>) no-repeat top left;
+  background-size: 200% 250%;
+  font-size: 15px;
+}
+
+.report,
+.shareApp,
+.twitterConnect {
+  float: left;
+}
+
+.toTop,
+.eventAdd,
+.notificationsGet {
+  float: right;
+}
+
+.shareApp,
+.twitterConnect {
+  clear: both;
+}
+
+.location-preselect-footer {
+  clear: both;
+}
+
+.shareApp,
+.eventAdd,
+.twitterConnect,
+.notificationsGet {
+  margin-top: 15px;
+
+  cursor: pointer;
+}
+
+.twitterConnect{
+  padding-left: 25px;
+
+  background: url(<%= asset_path 'twitter_bird.png' %>) no-repeat left center;
+  background-size: auto 15px;
+}
+
+.locationFooter,
+.copyright,
+.apiContact,
+.policies {
+  margin-top: 15px;
+
+  text-align: center;
+}
+
+.copyright {
+  color: #999;
+}
+
+.copyright {
+  cursor: default;
+}
+
+.report,
+.toTop,
+.develop,
+.contact,
+.tos,
+.dmca,
+.privacy {
+  cursor: pointer;
+}
+
+.dot {
+  cursor: default;
+}
+
+
+/*
+Report Popup Styling
+*/
+
+
+.report-title {
+  margin-bottom: 10px;
+
+  font-size: 14px;
+}
+
+.reportDesc {
+  width: 90%;
+  height: 50%;
+  padding: 5px;
+
+  color: #222;
+  background-color: #f3f3f3;
+  font-size: 13px;
+  border: 0;
+  border-radius: 5px;
+  resize: none;
+  outline: 0;
+  text-indent: 0;
+}
+
+.reportDesc::placeholder {
+  color: #222;
+}
+
+.report-submit {
+  width: 100px;
+  margin-top: 12px;
+  margin-right: 7%;
+  padding: 8px 10px;
+  float: right;
+  
+  background-color: #f3f3f3;
+  border-radius: 7px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+
+/*
+Notification Popup Styling
+*/
+
+
+.email-title,
+.frequency-title {
+  margin-left: 15px;
+  margin-bottom: 5px;
+
+  text-align: left;
+  font-size: .9rem;
+}
+
+#notifyEmail {
+  width: 100%;
+  padding: 8px 15px;
+  margin-bottom: 20px;
+
+  background-color: #f3f3f3;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.frequency {
+  padding: 6px 0;
+  margin-bottom: 20px;
+
+  background-color: white;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.frequency .dropdown-menu {
+  width: 28%;
+  margin-left: 37%;
+  margin-top: 7px;
+}
+
+.done-notify {
+  float: right;
+  padding: 5px 25px;
+  margin-top: 25px;
+  margin-right: 10px;
+
+  border: 0;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.done-notify:hover {
+  cursor: pointer;
+}
+
+
+/*
+Location Footer Styling
+*/
+
+.location-preselect-footer {
+  padding-top: 16px;
+
+  text-align: center;
+}
+
+.location-preselect-footer .states,
+.location-preselect-footer .canada,
+.location-preselect-footer .cities {
+  display: inline-block;
+  width: auto;
+  padding: 0;
+
+  border: none;
+  background-color: inherit;
+}
+
+.location-preselect-footer .states,
+.location-preselect-footer .canada {
+  margin-right: 35px;
+}
+
+.location-preselect-footer .states:hover,
+.location-preselect-footer .canada:hover,
+.location-preselect-footer .cities:hover {
+  cursor: pointer;
+}
+
+.location-preselect-footer .states-menu,
+.location-preselect-footer .canada-menu,
+.location-preselect-footer .cities-menu {
+  width: 150px;
+  margin-left: -69%;
+}
+
+
+/*
+Member Slider Styling
+*/
+
+#member-slider-frame {
+  width: 100%;
+  height: 253px;
+  margin-top: 33px;
+  padding: 8px 0;
+
+  background-color: #171717;
+  border-top: 1px solid #00b0b0;
+  border-bottom: 1px solid #000;
+  overflow: hidden;
+}
+
+#member-slider {
+  width: 3090px;
+  height: 253px;
+}
+
+.member-block {
+  width: 280px;
+  height: 100%;
+  float: left;
+  padding-left: 12px;
+  padding-right: 20px;
+  margin-right: 28px;
+
+  color: rgb(153, 153, 153);
+  font-size: 14px;
+}
+
+.member-block .members-title,
+.member-block .rep-title {
+  color: #ccc;
+  font-size: 16px;
+}
+
+.member-block .members-title {
+  margin-left: 26px;
+}
+
+.member-block .rep-title {
+  margin-right: 11px;
+}
+
+.member-block:not(:first-child) {
+  padding-top: 24px;
+}
+
+
+.member-container {
+  clear: both;
+}
+
+
+
+/*
+Sidebar Styling
+*/
+
+#sidebar-wrapper {
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+
+  color: #ccc;
+}
+
+#sidebar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+#sidebar-members {
+  margin-bottom: 25px;
+}
+
+.members-title {
+  float: left;
+  margin-left: 7px;
+}
+
+.rep-title {
+  float: right;
+  margin-right: 30px;
+}
+
+.members-list {
+  clear: both;
+  width: 280px;
+  height: 318px;
+  overflow: scroll;
+
+  color: rgb(153, 153, 153);
+  font-size: 14px;
+}
+
+.rank {
+  display: inline-block;
+  width: 24px;
+  margin-right: 2px;
+
+  text-align: right;
+}
+
+.rep {
+  float: right;
+  margin-right: 8px;
+}
+
+.members-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.members-list::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #444;
+}
+
+.members-list::-webkit-scrollbar-corner  {
+  color: black;
+}
+
+.members-title:hover,
+.rep-title:hover {
+  cursor: default;
+}
+
+.member-container:hover {
+  color: #00e9e9;
+  cursor: pointer;
+}
+
+.downloadApp {
+  position: relative;
+  margin-bottom: 33px;
+}
+
+.downloadApp:hover {
+  cursor: pointer;
+}
+
+.download-info {
+  padding: 20px 100px 20px 0;
+  
+  text-align: right;
+  line-height: 1rem;
+}
+
+.download-info span {
+  text-decoration: underline;
+}
+
+.download-pic {
+  width: 90px;
+  height: 90px;
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  background: url(<%= asset_path 'mobile-ad.png' %>) no-repeat center center;
+  background-size: auto 90px;
+}
+
+.sideNotify,
+.sideAddEvent {
+  text-align: right;
+}
+
+.sideNotify:hover,
+.sideAddEvent:hover {
+  cursor: pointer;
+}
+
+.sideNotify-info,
+.sideAddEvent-info {
+  padding-right: 5px;
+  vertical-align: 5px;
+  text-decoration: underline;
+}
+
+.sideNotify img,
+.sideAddEvent img {
+  height: 50px;
+}
+
+
+/*
+Loading Styling
+*/
+
+.loading-wrapper {
+  margin: 69px 0;
+  
+  text-align: center;
+}
+
+.lds-heart {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  transform: rotate(45deg);
+  transform-origin: 32px 32px;
+}
+.lds-heart div {
+  top: 23px;
+  left: 19px;
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.lds-heart div:after,
+.lds-heart div:before {
+  content: " ";
+  position: absolute;
+  display: block;
+  width: 26px;
+  height: 26px;
+  background: #fff;
+}
+.lds-heart div:before {
+  left: -17px;
+  border-radius: 50% 0 0 50%;
+}
+.lds-heart div:after {
+  top: -17px;
+  border-radius: 50% 50% 0 0;
+}
+@keyframes lds-heart {
+  0% {
+    transform: scale(0.95);
+  }
+  5% {
+    transform: scale(1.1);
+  }
+  39% {
+    transform: scale(0.85);
+  }
+  45% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
+
+
+
+
+/*
 Hide Styling
 */
 
 .hide {
   display: none;
+}
+
+
+
+
+
+
+/*
+Media Queries
+*/
+
+@media only screen and (max-width: 1500px) {
+  #sidebar-members,
+  .downloadApp,
+  .sideNotify,
+  .sideAddEvent-info {
+    display: none;
+  }
+
+  #member-slider-frame {
+    display: block;
+  }
+
+
 }

@@ -1268,6 +1268,21 @@ const sliderLogic = (() => {
     })
 
     //Detect touch for mobile
+    let startx;
+    slideFrame.addEventListener('touchstart', e => {
+      startx = parseInt(e.changedTouches[0].clientX);
+    })
+    slideFrame.addEventListener('touchmove', g => {
+      let endx = parseInt(g.changedTouches[0].clientX);
+      let dist = endx - startx;
+      if (dist > 0 ) {
+        shiftLeft(sliderType, dist);
+      } else {
+        shiftRight(sliderType, dist);
+      }
+    })
+
+    /*
     slideFrame.addEventListener('touchstart', e => {
       let startx = parseInt(e.changedTouches[0].clientX);
 
@@ -1282,6 +1297,7 @@ const sliderLogic = (() => {
       })
 
     })
+    */
 
 
 

@@ -1066,7 +1066,7 @@ const sliderLogic = (() => {
     //Decide width increment
     let stepWidth;
     if (dist) {
-      stepWidth = Math.abs(dist);
+      stepWidth = Math.abs(dist) + 20;
     } else if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;

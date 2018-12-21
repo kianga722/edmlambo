@@ -1280,7 +1280,9 @@ const sliderLogic = (() => {
       } else {
         shiftRight(sliderType, dist);
       }
-      startx = endx;
+      if (Math.abs(dist) > 20) {
+        startx = endx ;
+      }
     })
 
     /*

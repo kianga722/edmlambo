@@ -1038,7 +1038,7 @@ const eventsLogic = (() => {
         sliderLogic.shiftRight(memberSlider);
       }
     })
-
+    
 
   }
 
@@ -1050,7 +1050,7 @@ const eventsLogic = (() => {
 //Recent Events Slider Module
 const sliderLogic = (() => {
   //Function to shift right
-  const shiftRight = (sliderType) => {
+  const shiftRight = (sliderType, dist=false) => {
     //Number of events
     let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
@@ -1065,7 +1065,9 @@ const sliderLogic = (() => {
 
     //Decide width increment
     let stepWidth;
-    if (sliderType === document.querySelector('.recent-slider')) {
+    if (dist) {
+      stepWidth = Math.abs(dist);
+    } else if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;
       } else {
@@ -1088,7 +1090,7 @@ const sliderLogic = (() => {
     }
   }
   //Function to shift left
-  const shiftLeft = (sliderType) => {
+  const shiftLeft = (sliderType, dist=false) => {
     //Number of events
     let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
@@ -1103,8 +1105,14 @@ const sliderLogic = (() => {
 
     //Decide width increment
     let stepWidth;
-    if (sliderType === document.querySelector('.recent-slider')) {
-      stepWidth = 240;
+    if (dist) {
+      stepWidth = Math.abs(dist);
+    } else if (sliderType === document.querySelector('.recent-slider')) {
+      if (window.innerWidth <= 750) {
+        stepWidth = 140;
+      } else {
+        stepWidth = 240;
+      }
     } else if (sliderType === document.querySelector('.fav-slider')) {
       stepWidth = 110;
     } else {
@@ -1258,6 +1266,23 @@ const sliderLogic = (() => {
         shiftRight(sliderType);
       }
     })
+
+    //Detect touch for mobile
+    slideFrame.addEventListener('touchstart', e => {
+      let startx = parseInt(e.changedTouches[0].clientX);
+
+      slideFrame.addEventListener('touchmove', g => {
+        let endx = parseInt(g.changedTouches[0].clientX);
+        let dist = endx - startx;
+        if (dist > 0 ) {
+          shiftLeft(sliderType, dist);
+        } else {
+          shiftRight(sliderType, dist);
+        }
+      })
+
+    })
+
 
 
     //Event Listener when slide transition ends

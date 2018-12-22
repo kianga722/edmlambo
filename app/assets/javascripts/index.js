@@ -1066,7 +1066,7 @@ const sliderLogic = (() => {
     //Decide width increment
     let stepWidth;
     if (dist) {
-      stepWidth = Math.abs(dist);
+      stepWidth = Math.abs(dist) + 30;
     } else if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;
@@ -1106,7 +1106,7 @@ const sliderLogic = (() => {
     //Decide width increment
     let stepWidth;
     if (dist) {
-      stepWidth = Math.abs(dist);
+      stepWidth = Math.abs(dist) + 30;
     } else if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;
@@ -1287,6 +1287,7 @@ const sliderLogic = (() => {
        //   
         //}
      // }
+      console.log(dist)
 
       if (dist > 0 ) {
         shiftLeft(sliderType, dist);

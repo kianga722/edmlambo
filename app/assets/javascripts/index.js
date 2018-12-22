@@ -1271,15 +1271,11 @@ const sliderLogic = (() => {
     let startx;
     let lastx;
     slideFrame.addEventListener('touchstart', e => {
-      //Prevent default scrolling of page
-      e.preventDefault();
       startx = parseInt(e.changedTouches[0].clientX);
       //Last touch is same as first touch for first touchmove
       //lastx = startx;
     })
     slideFrame.addEventListener('touchmove', e => {
-      //Prevent default scrolling of page
-      e.preventDefault();
       let endx = parseInt(e.changedTouches[0].clientX);
       let dist = endx - startx;
       //let dist = endx - lastx;

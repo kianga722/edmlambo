@@ -1066,7 +1066,7 @@ const sliderLogic = (() => {
     //Decide width increment
     let stepWidth;
     if (dist) {
-      stepWidth = Math.abs(dist) + 20;
+      stepWidth = Math.abs(dist);
     } else if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;
@@ -1106,7 +1106,7 @@ const sliderLogic = (() => {
     //Decide width increment
     let stepWidth;
     if (dist) {
-      stepWidth = Math.abs(dist) + 30;
+      stepWidth = Math.abs(dist);
     } else if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;
@@ -1269,18 +1269,33 @@ const sliderLogic = (() => {
 
     //Detect touch for mobile
     let startx;
+    let lastx;
     slideFrame.addEventListener('touchstart', e => {
       startx = parseInt(e.changedTouches[0].clientX);
+      //Last touch is same as first touch for first touchmove
+      lastx = startx;
     })
     slideFrame.addEventListener('touchmove', g => {
       let endx = parseInt(g.changedTouches[0].clientX);
-      let dist = endx - startx;
+      //let dist = endx - startx;
+      let dist = endx - lastx;
+
+      //If current touch is to right of beginning touch
+     // if (endx > startx) {
+        //If current touch is to right of last fired touch
+      //  if (lastx > endx) {
+       //   
+        //}
+     // }
+
       if (dist > 0 ) {
         shiftLeft(sliderType, dist);
       } else {
         shiftRight(sliderType, dist);
       }
-      startx = endx ;
+
+      //Change last fired touch to current touch for next touchmove
+      lastx = endx ;
     })
 
     /*

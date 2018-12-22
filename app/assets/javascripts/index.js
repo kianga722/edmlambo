@@ -1261,9 +1261,9 @@ const sliderLogic = (() => {
       //Prevent default scrolling of page
       e.preventDefault();
       if (e.deltaY > 0) {
-        shiftLeft(sliderType);
-      } else {
         shiftRight(sliderType);
+      } else {
+        shiftLeft(sliderType);
       }
     })
 

@@ -1273,12 +1273,12 @@ const sliderLogic = (() => {
     slideFrame.addEventListener('touchstart', e => {
       startx = parseInt(e.changedTouches[0].clientX);
       //Last touch is same as first touch for first touchmove
-      lastx = startx;
+      //lastx = startx;
     })
     slideFrame.addEventListener('touchmove', g => {
       let endx = parseInt(g.changedTouches[0].clientX);
-      //let dist = endx - startx;
-      let dist = endx - lastx;
+      let dist = endx - startx;
+      //let dist = endx - lastx;
 
       //If current touch is to right of beginning touch
      // if (endx > startx) {
@@ -1296,7 +1296,7 @@ const sliderLogic = (() => {
       }
 
       //Change last fired touch to current touch for next touchmove
-      lastx = endx ;
+      //lastx = endx ;
     })
 
     /*

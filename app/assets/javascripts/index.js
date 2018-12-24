@@ -1037,6 +1037,15 @@ const eventsLogic = (() => {
       } else {
         sliderLogic.shiftRight(memberSlider);
       }
+    });
+    memberSlider.addEventListener('touchmove', e => {
+      let endx = parseInt(e.changedTouches[0].clientX);
+      let dist = endx - startx;
+      if (dist > 0 ) {
+        sliderLogic.shiftLeft(memberSlider, dist);
+      } else {
+        sliderLogic.shiftRight(memberSlider, dist);
+      }
     })
     
 
@@ -1287,7 +1296,6 @@ const sliderLogic = (() => {
        //   
         //}
      // }
-      console.log(dist)
 
       if (dist > 0 ) {
         shiftLeft(sliderType, dist);

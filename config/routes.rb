@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   root 'events#index'
   put 'events', to: 'events#update'
   post 'events', to: 'events#create'

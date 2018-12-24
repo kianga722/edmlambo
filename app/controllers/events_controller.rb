@@ -299,7 +299,6 @@ class EventsController < ApplicationController
     #List of artists to pass to JS
     #Use global Gon var for now until come up with something better
     Gon.global.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
-    #Use global gon variable for now
     #gon.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
     #gon.watch.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
 

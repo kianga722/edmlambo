@@ -1038,6 +1038,13 @@ const eventsLogic = (() => {
         sliderLogic.shiftRight(memberSlider);
       }
     });
+    
+    //Detect touch for mobile
+    let startx;
+    let lastx;
+    memberSlider.addEventListener('touchstart', e => {
+      startx = parseInt(e.changedTouches[0].clientX);
+    })
     memberSlider.addEventListener('touchmove', e => {
       let endx = parseInt(e.changedTouches[0].clientX);
       let dist = endx - startx;

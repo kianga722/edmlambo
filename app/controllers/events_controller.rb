@@ -95,10 +95,6 @@ class EventsController < ApplicationController
   end
 
 
-
-
-
-
   #Location Popup
   def update
     #Get current locations before change
@@ -300,7 +296,6 @@ class EventsController < ApplicationController
     #Use global Gon var for now until come up with something better
     Gon.global.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
     #gon.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
-    #gon.watch.artists = Artist.all.order(:name).map { |a| [a.name,a.id] }
 
     @renderTour = false
 

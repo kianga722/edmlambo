@@ -8,6 +8,4 @@ Rails.application.routes.draw do
   get '/tours', to: 'events#tours'
   get '/:id', to: 'events#show'
 
-  #resources :events, only: [:index]
-
 end

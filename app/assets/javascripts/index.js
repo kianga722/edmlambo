@@ -630,20 +630,6 @@ const eventsLogic = (() => {
       }
     }
 
-/*
-    const filterBox = document.querySelector('.filter-box');
-    const filterIcon = document.querySelector('.filter-icon');
-    if (filterBox) {
-      if (filterIcon.classList.contains('filter-x')) {
-        filterIcon.classList.remove('filter-x');
-        filterBox.value = '';
-        filterBox.focus();
-        filter();
-      } else {
-        filterBox.focus();
-      }
-    }
-    */
   }
 
   //Function to light up fav icon
@@ -1041,7 +1027,6 @@ const eventsLogic = (() => {
     
     //Detect touch for mobile
     let startx;
-    let lastx;
     memberSlider.addEventListener('touchstart', e => {
       startx = parseInt(e.changedTouches[0].clientX);
     })
@@ -1285,53 +1270,21 @@ const sliderLogic = (() => {
 
     //Detect touch for mobile
     let startx;
-    let lastx;
+    //let lastx;
     slideFrame.addEventListener('touchstart', e => {
       startx = parseInt(e.changedTouches[0].clientX);
-      //Last touch is same as first touch for first touchmove
-      //lastx = startx;
     })
     slideFrame.addEventListener('touchmove', e => {
       let endx = parseInt(e.changedTouches[0].clientX);
       let dist = endx - startx;
-      //let dist = endx - lastx;
-
-      //If current touch is to right of beginning touch
-     // if (endx > startx) {
-        //If current touch is to right of last fired touch
-      //  if (lastx > endx) {
-       //   
-        //}
-     // }
-
       if (dist > 0 ) {
         shiftLeft(sliderType, dist);
       } else {
         shiftRight(sliderType, dist);
       }
-
-      //Change last fired touch to current touch for next touchmove
+      //Figure out how to make touch smoother and work when continuously holding
       //lastx = endx ;
     })
-
-    /*
-    slideFrame.addEventListener('touchstart', e => {
-      let startx = parseInt(e.changedTouches[0].clientX);
-
-      slideFrame.addEventListener('touchmove', g => {
-        let endx = parseInt(g.changedTouches[0].clientX);
-        let dist = endx - startx;
-        if (dist > 0 ) {
-          shiftLeft(sliderType, dist);
-        } else {
-          shiftRight(sliderType, dist);
-        }
-      })
-
-    })
-    */
-
-
 
     //Event Listener when slide transition ends
     sliderType.addEventListener('transitionend', () => {
@@ -1509,7 +1462,6 @@ const toursLogic = (() => {
       } else {
         //Create array of artist suggestions max 5
         //artists = gon.artists;
-        //gon.watch('artists', (artists) => {
         artists = gon.global.artists;
 
         let suggestions = []
@@ -1556,8 +1508,6 @@ const toursLogic = (() => {
             foundArtists.children[0].click();
           }
         }
-
-      //})
 
       }
 

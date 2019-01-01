@@ -501,7 +501,7 @@ class EventsController < ApplicationController
       return Event.where(state: locations_edit).or(Event.where(id: favsArr)).where('date >= ?', today).order(added: :desc).limit(10);
     elsif newEvent
       #Array of recently added events no older than last week
-      lastWeek = (Time.now - (7*24*60*60)).strftime('%Y-%m-%d');
+      lastWeek = (Time.now - (7*24*60*60)).strftime('%Y-%m-%d')
       return Event.where(state: locations_edit).or(Event.where(id: favsArr)).where('date >= ?', today).where('added >= ?', lastWeek).order(added: :desc)
     else
       #Array of all events found

@@ -984,8 +984,9 @@ const eventsLogic = (() => {
     memberSliderFill();
 
     //Event Listener for member slider scrolling
+    const memberFrame= document.getElementById('member-slider-frame');
     const memberSlider = document.getElementById('member-slider');
-    memberSlider.addEventListener('wheel', e => {
+    memberFrame.addEventListener('wheel', e => {
       //Prevent default scrolling of page
       e.preventDefault();
       if (e.deltaY > 0) {
@@ -996,6 +997,37 @@ const eventsLogic = (() => {
     });
     
     //Detect touch for mobile
+    let isTouch = false;
+    let startx;
+    let transx;
+    memberFrame.addEventListener('touchstart', e => {
+      isTouch = true;
+      startx = parseInt(e.changedTouches[0].clientX);
+      if (window.getComputedStyle(memberSlider).getPropertyValue('transform') === 'none') {
+        memberSlider.style.transform = `translateX(0)`;
+        transx = 0;
+      } else {
+        transx = parseInt(window.getComputedStyle(memberSlider).getPropertyValue('transform').split(',')[4]);
+      }
+      //Remove any previous transition delays
+      memberSlider.style.transition = '0s';
+    })
+    memberFrame.addEventListener('touchmove', e => {
+      if (!isTouch) {
+        return;
+      }
+      let endx = parseInt(e.changedTouches[0].clientX);
+      let dist = endx - startx;
+      let move = transx + dist;
+      memberSlider.style.transform = `translateX(${move}px)`;
+    })
+    memberFrame.addEventListener('touchend', e => {
+      isTouch = false;
+      sliderLogic.touchEnd(memberSlider);
+    })
+
+
+    /*
     let startx;
     memberSlider.addEventListener('touchstart', e => {
       startx = parseInt(e.changedTouches[0].clientX);
@@ -1009,6 +1041,7 @@ const eventsLogic = (() => {
         sliderLogic.shiftRight(memberSlider, dist);
       }
     })
+    */
     
 
   }
@@ -1125,7 +1158,9 @@ const sliderLogic = (() => {
           slideFrame = document.querySelector('.recent-slider-frame');
         } else if (sliderType === document.querySelector('.fav-slider')) {
           slideFrame = document.querySelector('.fav-slider-frame');
-      }
+      } else if (sliderType === document.getElementById('member-slider')) {
+        slideFrame = document.getElementById('member-slider-frame');
+    }
       //Length of events in slider - width of slideframe
       let rightMove = sliderType.children[0].clientWidth*eventLength - slideFrame.clientWidth;
 
@@ -1311,7 +1346,7 @@ const sliderLogic = (() => {
     })
   }
 
-  return { sliderInit, shiftLeft, shiftRight }
+  return { sliderInit, shiftLeft, shiftRight, touchEnd }
 
 })();
 

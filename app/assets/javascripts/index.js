@@ -1101,7 +1101,7 @@ const sliderLogic = (() => {
     }
   }
   //Function for mobile shift
-  const shiftMobile = (sliderType, dist) => {
+  const shiftMobile = (sliderType, move) => {
     //Number of events
     let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
@@ -1111,15 +1111,29 @@ const sliderLogic = (() => {
     //last event
     let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
 
+    //Do the translateX
+    sliderType.style.transform = `translateX(${move}px)`;
 
-    //Only shift if last event still overflowing to the right or first event still overflowing to the left
-    if (window.getComputedStyle(sliderType).getPropertyValue('transform') === 'none') {
+    //Move to edge of first event if overscrolled left
+    if (eventFirst.left > frameRect.left) {
       sliderType.style.transform = `translateX(0)`;
+      sliderType.style.transition = '0.3s';
+      return;
+    } 
+
+    //Move to edge of last event if overscrolled right
+    let slideFrame;
+    if (sliderType === document.querySelector('.recent-slider')) {
+        slideFrame = document.querySelector('.recent-slider-frame');
+      } else if (sliderType === document.querySelector('.fav-slider')) {
+        slideFrame = document.querySelector('.fav-slider-frame');
     }
 
-    if (eventFirst.left < frameRect.left && frameRect.right < eventLast.right) {
-      //Do the translateX
-      sliderType.style.transform = `translateX(${dist}px)`;
+    let rightMove = sliderType.children[0].clientWidth*eventLength - slideFrame.clientWidth;
+    if (frameRect.right > eventLast.right) {
+      sliderType.style.transform = `translateX(-${rightMove}px)`;
+      sliderType.style.transition = '0.3s';
+      return;
     }
   }
 
@@ -1283,10 +1297,10 @@ const sliderLogic = (() => {
       }
       */
 
-
-      sliderType.style.transform = `translateX(${transx+dist}px)`;
-      transx = parseInt(window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4]);
-      //shiftMobile(sliderType, dist);
+      //sliderType.style.transform = `translateX(${transx+dist}px)`;
+      //transx = parseInt(window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4]);
+      let move = transx + dist;
+      shiftMobile(sliderType, move);
 
 
       //Figure out how to make touch smoother and work when continuously holding

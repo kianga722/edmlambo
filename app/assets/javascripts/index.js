@@ -331,25 +331,8 @@ const eventsLogic = (() => {
 
     //Make sure clicking on popup itself does not exit
     const popupBG = document.getElementById('popup-bg');
-    if (popupBG) {
-      if (!popupBG.classList.contains('hide')) {
-        if (target.id === 'location-popup'
-          ||target.parentNode.id === 'location-popup'
-          ||target.parentNode.parentNode.id === 'location-popup'
-          ||target.parentNode.parentNode.parentNode.id === 'location-popup'
-          ||target.parentNode.parentNode.parentNode.parentNode.id === 'location-popup'
-          ||target.id === 'share-popup'
-          ||target.parentNode.id === 'share-popup'
-          ||target.parentNode.parentNode.id === 'share-popup'
-          ||target.parentNode.parentNode.parentNode.id === 'share-popup'
-          ||target.id === 'report-popup'
-          ||target.parentNode.id === 'report-popup'
-          ||target.id === 'notification-popup'
-          ||target.parentNode.id === 'notification-popup'
-          ||target.parentNode.parentNode.id === 'notification-popup'
-          ||target.parentNode.parentNode.parentNode.id === 'notification-popup'
-          ||target.parentNode.parentNode.parentNode.parentNode.id === 'notification-popup')
-        {
+    if (popupBG && !popupBG.classList.contains('hide')) {
+         if (target.closest('#location-popup, #share-popup, #report-popup, #notification-popup')) {
           return;
         } else {
           //Hide correct popup
@@ -384,7 +367,7 @@ const eventsLogic = (() => {
           }
 
         }
-      }
+      
     }
     
   }
@@ -448,22 +431,9 @@ const eventsLogic = (() => {
     let eventMore;
     //Determine what was clicked
     //Do not hide when clicking favorites
-    if (!target.classList.contains('favorite')) {
-      if (target.classList.contains('event')) {
-        //if click on event div
-        eventMore = target.children[5];
-      } else if (target.parentNode.classList.contains('event') 
-      && !target.classList.contains('event-more')) {
-        //if click on event title
-        eventMore = target.parentNode.children[5];
-      } else if  (target.parentNode.parentNode.classList.contains('event') 
-      && !target.parentNode.classList.contains('event-more')) {
-        //if click on event location
-        eventMore = target.parentNode.parentNode.children[5];
-      } else {
-        //Ignore all other clicks
-        return;
-      }
+    if (!target.matches('.favorite') && target.closest('.event') &&  !target.closest('.event-more')) {
+      let eventElement = target.closest('.event');
+      eventMore = eventElement.querySelector('.event-more');
     } else {
       //Ignore all other clicks
       return;
@@ -1340,44 +1310,27 @@ const festivalsLogic = (() => {
     let classCheck;
     let classMore;
     if (tab === 'festival') {
-      classCheck = 'festival';
-      classMore = 'festival-more';
+      classCheck = '.festival';
+      classMore = '.festival-more';
     } else if (tab === 'tour') {
-      classCheck = 'event';
-      classMore = 'event-more'
+      classCheck = '.event';
+      classMore = '.event-more'
     }
 
     let festMore;
     //Determine what was clicked
     //Do not hide when clicking favorites
     if (!target.classList.contains('favorite')
-      &&!target.classList.contains('scIcon')) {
-      if (target.classList.contains(classCheck)) {
-        //if click on festival div
-        festMore = target.children[3];
-      } else if (target.parentNode.classList.contains(classCheck)
-      && !target.classList.contains(classMore)) {
-        //if click on date info wrapper
-        festMore = target.parentNode.children[3];
-      } else if (target.parentNode.parentNode.classList.contains(classCheck)
-      && !target.parentNode.classList.contains(classMore)) {
-        //if click on date wrapper or festival info
-        festMore = target.parentNode.parentNode.children[3];
-      } else if     (target.parentNode.parentNode.parentNode.classList.contains(classCheck) 
-      && !target.parentNode.parentNode.classList.contains(classMore)) {
-        //if click on festival pic wrapper or festival dates
-        festMore = target.parentNode.parentNode.parentNode.children[3];
-      } else if (target.parentNode.parentNode.parentNode.parentNode.classList.contains(classCheck)) {
-        //if click on festival pic or date divs
-        festMore = target.parentNode.parentNode.parentNode.parentNode.children[3];
+      &&!target.classList.contains('scIcon')
+      &&target.closest(classCheck)
+      &&!target.closest(classMore)) {
+        let eventElement = target.closest(classCheck);
+        festMore = eventElement.querySelector(classMore);
       } else {
         //Ignore all other clicks
         return;
       }
-    } else {
-      //Ignore all other clicks
-      return;
-    }
+    
 
     //Hide if click on already unhidden event
     if (!festMore.classList.contains('hide')) {

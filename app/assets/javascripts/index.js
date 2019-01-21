@@ -1021,7 +1021,7 @@ const eventsLogic = (() => {
 //Recent Events Slider Module
 const sliderLogic = (() => {
   //Function to shift right
-  const shiftRight = (sliderType, dist=false) => {
+  const shiftRight = (sliderType) => {
     //Number of events
     let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
@@ -1036,9 +1036,7 @@ const sliderLogic = (() => {
 
     //Decide width increment
     let stepWidth;
-    if (dist) {
-      stepWidth = Math.abs(dist);
-    } else if (sliderType === document.querySelector('.recent-slider')) {
+    if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;
       } else {
@@ -1061,7 +1059,7 @@ const sliderLogic = (() => {
     }
   }
   //Function to shift left
-  const shiftLeft = (sliderType, dist=false) => {
+  const shiftLeft = (sliderType) => {
     //Number of events
     let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
@@ -1076,9 +1074,7 @@ const sliderLogic = (() => {
 
     //Decide width increment
     let stepWidth;
-    if (dist) {
-      stepWidth = Math.abs(dist);
-    } else if (sliderType === document.querySelector('.recent-slider')) {
+    if (sliderType === document.querySelector('.recent-slider')) {
       if (window.innerWidth <= 750) {
         stepWidth = 140;
       } else {
@@ -1104,6 +1100,32 @@ const sliderLogic = (() => {
       sliderType.style.transition = '0.3s';
     }
   }
+  //Function for mobile shift
+  const shiftMobile = (sliderType, dist) => {
+    //Number of events
+    let eventLength = sliderType.children.length;
+    //Figure out how many events are on left and right of frame
+    let frameRect = sliderType.parentNode.getBoundingClientRect();
+    //first event
+    let eventFirst = sliderType.children[0].getBoundingClientRect();
+    //last event
+    let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
+
+
+    //Only shift if last event still overflowing to the right or first event still overflowing to the left
+    if (window.getComputedStyle(sliderType).getPropertyValue('transform') === 'none') {
+      sliderType.style.transform = `translateX(0)`;
+    }
+
+    if (eventFirst.left < frameRect.left && frameRect.right < eventLast.right) {
+      //Do the translateX
+      sliderType.style.transform = `translateX(${dist}px)`;
+    }
+  }
+
+
+
+
   //Function to display arrows
   const arrowDisplay = (sliderType, slideLeft, slideRight) => {
     //Number of events
@@ -1240,9 +1262,15 @@ const sliderLogic = (() => {
 
     //Detect touch for mobile
     let startx;
-    //let lastx;
+    let transx;
     slideFrame.addEventListener('touchstart', e => {
       startx = parseInt(e.changedTouches[0].clientX);
+      if (window.getComputedStyle(sliderType).getPropertyValue('transform') === 'none') {
+        sliderType.style.transform = `translateX(0)`;
+        transx = 0;
+      } else {
+        transx = parseInt(window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4]);
+      }
     })
     slideFrame.addEventListener('touchmove', e => {
       let endx = parseInt(e.changedTouches[0].clientX);
@@ -1254,9 +1282,14 @@ const sliderLogic = (() => {
         shiftRight(sliderType, dist);
       }
       */
-      sliderType.style.transform = `translateX(${dist}px)`;
+
+
+      sliderType.style.transform = `translateX(${transx+dist}px)`;
+      transx = parseInt(window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4]);
+      //shiftMobile(sliderType, dist);
+
+
       //Figure out how to make touch smoother and work when continuously holding
-      //lastx = endx ;
     })
 
     //Event Listener when slide transition ends

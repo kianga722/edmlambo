@@ -1016,6 +1016,7 @@ const eventsLogic = (() => {
       if (!isTouch) {
         return;
       }
+      e.preventDefault();
       let endx = parseInt(e.changedTouches[0].clientX);
       let dist = endx - startx;
       let move = transx + dist;

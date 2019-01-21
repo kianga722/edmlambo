@@ -1114,6 +1114,7 @@ const sliderLogic = (() => {
     //Do the translateX
     sliderType.style.transform = `translateX(${move}px)`;
 
+    /*
     //Move to edge of first event if overscrolled left
     if (eventFirst.left > frameRect.left) {
       sliderType.style.transform = `translateX(0)`;
@@ -1135,6 +1136,7 @@ const sliderLogic = (() => {
       sliderType.style.transition = '0.3s';
       return;
     }
+    */
   }
 
 

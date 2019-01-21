@@ -1242,8 +1242,6 @@ const sliderLogic = (() => {
     let startx;
     //let lastx;
     slideFrame.addEventListener('touchstart', e => {
-      console.log(slideFrame)
-      console.log(e.changedTouches)
       startx = parseInt(e.changedTouches[0].clientX);
     })
     slideFrame.addEventListener('touchmove', e => {
@@ -1257,7 +1255,6 @@ const sliderLogic = (() => {
       }
       */
       sliderType.style.transform = `translateX(${dist}px)`;
-      sliderType.style.transition = '0.3s';
       //Figure out how to make touch smoother and work when continuously holding
       //lastx = endx ;
     })

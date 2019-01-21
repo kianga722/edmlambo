@@ -1122,15 +1122,15 @@ const sliderLogic = (() => {
     } 
 
     //Move to edge of last event if overscrolled right
-    let slideFrame;
-    if (sliderType === document.querySelector('.recent-slider')) {
-        slideFrame = document.querySelector('.recent-slider-frame');
-      } else if (sliderType === document.querySelector('.fav-slider')) {
-        slideFrame = document.querySelector('.fav-slider-frame');
-    }
-
-    let rightMove = sliderType.children[0].clientWidth*eventLength - slideFrame.clientWidth;
     if (frameRect.right > eventLast.right) {
+      let slideFrame;
+      if (sliderType === document.querySelector('.recent-slider')) {
+          slideFrame = document.querySelector('.recent-slider-frame');
+        } else if (sliderType === document.querySelector('.fav-slider')) {
+          slideFrame = document.querySelector('.fav-slider-frame');
+      }
+      let rightMove = sliderType.children[0].clientWidth*eventLength - slideFrame.clientWidth;
+
       sliderType.style.transform = `translateX(-${rightMove}px)`;
       sliderType.style.transition = '0.3s';
       return;

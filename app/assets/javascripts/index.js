@@ -1101,7 +1101,7 @@ const sliderLogic = (() => {
     }
   }
   //Function for mobile shift
-  const shiftMobile = (sliderType) => {
+  const touchEnd = (sliderType) => {
     //Number of events
     let eventLength = sliderType.children.length;
     //Figure out how many events are on left and right of frame
@@ -1110,10 +1110,6 @@ const sliderLogic = (() => {
     let eventFirst = sliderType.children[0].getBoundingClientRect();
     //last event
     let eventLast = sliderType.children[eventLength-1].getBoundingClientRect();
-
-    //Do the translateX
-    //sliderType.style.transform = `translateX(${move}px)`;
-
 
     //Move to edge of first event if overscrolled left
     if (eventFirst.left > frameRect.left) {
@@ -1130,6 +1126,7 @@ const sliderLogic = (() => {
         } else if (sliderType === document.querySelector('.fav-slider')) {
           slideFrame = document.querySelector('.fav-slider-frame');
       }
+      //Length of events in slider - width of slideframe
       let rightMove = sliderType.children[0].clientWidth*eventLength - slideFrame.clientWidth;
 
       sliderType.style.transform = `translateX(-${rightMove}px)`;
@@ -1138,8 +1135,6 @@ const sliderLogic = (() => {
     }
     
   }
-
-
 
 
   //Function to display arrows
@@ -1289,6 +1284,8 @@ const sliderLogic = (() => {
       } else {
         transx = parseInt(window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4]);
       }
+      //Remove any previous transition delays
+      sliderType.style.transition = '0s';
     })
     slideFrame.addEventListener('touchmove', e => {
       if (!isTouch) {
@@ -1296,25 +1293,12 @@ const sliderLogic = (() => {
       }
       let endx = parseInt(e.changedTouches[0].clientX);
       let dist = endx - startx;
-      /*
-      if (dist > 0 ) {
-        shiftLeft(sliderType, dist);
-      } else {
-        shiftRight(sliderType, dist);
-      }
-      */
-
-      //transx = parseInt(window.getComputedStyle(sliderType).getPropertyValue('transform').split(',')[4]);
       let move = transx + dist;
       sliderType.style.transform = `translateX(${move}px)`;
-      //shiftMobile(sliderType, move);
-
-
-      //Figure out how to make touch smoother and work when continuously holding
     })
     slideFrame.addEventListener('touchend', e => {
       isTouch = false;
-      shiftMobile(sliderType);
+      touchEnd(sliderType);
     })
 
     //Event Listener when slide transition ends

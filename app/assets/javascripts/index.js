@@ -1026,24 +1026,7 @@ const eventsLogic = (() => {
       isTouch = false;
       sliderLogic.touchEnd(memberSlider);
     })
-
-
-    /*
-    let startx;
-    memberSlider.addEventListener('touchstart', e => {
-      startx = parseInt(e.changedTouches[0].clientX);
-    })
-    memberSlider.addEventListener('touchmove', e => {
-      let endx = parseInt(e.changedTouches[0].clientX);
-      let dist = endx - startx;
-      if (dist > 0 ) {
-        sliderLogic.shiftLeft(memberSlider, dist);
-      } else {
-        sliderLogic.shiftRight(memberSlider, dist);
-      }
-    })
-    */
-    
+  
 
   }
 

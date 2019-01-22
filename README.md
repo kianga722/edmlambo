@@ -11,7 +11,7 @@ This project aims to mimic a concerts listing website: [edmtrain](https://edmtra
 * Allows user to search and filter events by location, artist, date, and other details
 * Sliders displaying recently added events and favorites
 
-## To Do
+## Future Improvements
 
 * Add user log-in functionality
 * Add unique pictures for each artist

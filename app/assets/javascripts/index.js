@@ -1585,7 +1585,8 @@ const toursLogic = (() => {
       //Event Listeners for clicking on link to artist tour in event more
       toursList.addEventListener('click', e => {
         let target = e.target;
-        if (target.classList.contains('soundcloud-artist')) {
+        if (target.classList.contains('soundcloud-artist')
+         &&!target.classList.contains('same-artist')) {
           const navTours = document.querySelector('.tab-tours');
           navLogic.tabHighlight(navTours);
           navLogic.tabURL(navTours);

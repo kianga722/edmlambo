@@ -9,7 +9,7 @@ This project aims to mimic a concerts listing website: [edmtrain](https://edmtra
 
 * Built primarily using Ruby on Rails and JavaScript
 * Allows user to search and filter events by location, artist, date, and other details
-* Sliders displaying recently added events and favorites
+* Sliders displaying recently added events and favorited events
 
 ## Future Improvements
 

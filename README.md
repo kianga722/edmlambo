@@ -1,5 +1,5 @@
 # edmlambo
-This project aims to mimic a concerts listing website: [edmtrain](https://edmtrain.com)
+This personal project aims to mimic a concerts listing website: [edmtrain](https://edmtrain.com)
 
 [View App](https://edmlambo.herokuapp.com)
 

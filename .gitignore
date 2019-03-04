@@ -29,7 +29,3 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
-
-# Ignore JSON files from edmtrain API
-/db/*.json
-/db/*.json.old

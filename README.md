@@ -3,7 +3,7 @@ This personal project aims to mimic a concerts listing website: [edmtrain](https
 
 [View App](https://edmlambo.herokuapp.com)
 
-![screenshot](https://github.com/toptester1/edmlambo/blob/master/public/images/screenshot.jpg)
+![screenshot](https://github.com/kianga722/edmlambo/blob/master/public/images/screenshot.jpg)
 
 ## Summary
 
